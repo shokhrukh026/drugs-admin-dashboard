@@ -1,82 +1,43 @@
 <template>
     <q-page class="bg-grey-3">
         <div class="q-pa-md">
-            <q-expansion-item expand-separator icon="info" default-opened   header-class="bg-blue text-h6" dark :label="'Информация о лекарстве ' + data[0].title">
-
-             <q-list bordered separator dense class="bg-white shadow-1">
-               <q-item v-ripple>
-                 <q-item-section>
-                     <q-item-label class="text-h6 text-blue-9">Название лекарства : <span class="text-subtitle1 text-black">&nbsp;{{data[0].title}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Код: <span class="text-subtitle1 text-black">&nbsp;{{data[0].code}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Описание: <span class="text-subtitle1 text-black">&nbsp;{{data[0].description}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Штрих-код: <span class="text-subtitle1 text-black">&nbsp;{{data[0].barcode}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Страна: <span class="text-subtitle1 text-black">&nbsp;{{data[0].country}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Производитель: <span class="text-subtitle1 text-black">&nbsp;{{data[0].manufacture}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Серийный номер: <span class="text-subtitle1 text-black">&nbsp;{{data[0].serial_code}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">НДС: <span class="text-subtitle1 text-black">&nbsp;{{data[0].vat}}%</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Количество: <span class="text-subtitle1 text-black">&nbsp;{{data[0].quantity}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Вместимость: <span class="text-subtitle1 text-black">&nbsp;{{data[0].capacity}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Статус: <span class="text-subtitle1 text-black">&nbsp;{{data[0].status}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Цена покупки: <span class="text-subtitle1 text-black">&nbsp;{{data[0].purchase_price}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Цена продажи: <span class="text-subtitle1 text-black">&nbsp;{{data[0].selling_price}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-               <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Годен до: <span class="text-subtitle1 text-black">{{data[0].expire_date}}</span></q-item-label>
-                 </q-item-section>
-               </q-item>
-                
-             </q-list>
-            </q-expansion-item>
+            <q-table
+            dense
+            title=""
+            :data="data"
+            :columns="columns"
+            row-key="index"  
+            :filter="filter"
+            :loading="loading"
+            separator="cell"
+            :pagination.sync="pagination"
+            :rows-per-page-options="[1]"
+            :pagination-label="(firstRowIndex, endRowIndex, totalRowsNumber) => firstRowIndex + '-' + endRowIndex + ' из ' + totalRowsNumber"
+            >
+            <template v-slot:body-cell-actions="props">
+                <q-td :props="props">
+                    <q-btn dense round flat color="grey" :to="{ name: 'branch-update', params: {id: props.row.id, row: props.row}}"
+                     icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" :to="{ name: 'branch-info', params: {id: props.row.id, row: props.row}}" icon="fas fa-info-circle"></q-btn>
+                </q-td>
+            </template>
+            <template v-slot:top="props">
+                <span class="text-h6">История приходов в {{row[0].branch_name}}</span>
+                <q-space />
+                <q-input borderless dense debounce="300" color="primary" v-model="filter"
+                placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
+                <template v-slot:append>
+                    <q-icon name="search" />
+                </template>
+                </q-input>
+                <q-btn
+                flat round dense
+                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                @click="props.toggleFullscreen"
+                class="q-ml-md"
+                />
+            </template>
+            </q-table>
         </div>
         {{data}}
     </q-page>
@@ -88,16 +49,33 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
     props: {
-        id: {
-            type: Number,
-            required: true
-        },
+        id: [String, Number],
     },
     data(){
       return {
-        data: [
-            
+        rowsNumber: '',
+        pagination: {
+          rowsPerPage: 8,
+          sortBy: 'added_at',
+          descending: true,
+        },
+        row: [],
+        loading: false,
+        filter: '',
+        columns: [
+          { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true},
+          { name: 'products', align: 'center', label: 'Лекарство', field: 'title', sortable: true },
+          { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
+          { name: 'country', align: 'center', label: 'Страна', field: 'country', sortable: true },
+          { name: 'manufacture', align: 'center', label: 'Производитель', field: 'manufacture', sortable: true },
+          { name: 'serial_code', align: 'center', label: 'Серийный номер', field: 'serial_code', sortable: true },
+          { name: 'vat', align: 'center', label: 'НДС', field: 'vat', sortable: true },
+          { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
+          { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
+          { name: 'expire_date', align: 'center', label: 'Годен до', field: 'expire_date', sortable: true },
+          { name: 'actions', label: 'Действия', field: '', align:'center' },
         ],
+        data: [],
       }
     },
     watch:{
@@ -106,15 +84,24 @@ export default {
     async mounted(){
       await this.GET_ARRIVAL_ALL_INFO({arrival_id: Number(await this.id)});
       this.data = await this.getArrivalAllInfo;
+
+      if(this.getArrivalAll.length == 0){
+          await this.GET_ARRIVAL_ALL();
+      }
+
+      this.row = await this.getArrivalAll.filter(obj => {
+        return obj.id == this.id
+      })
+      
     },
     computed:{
       ...mapGetters([
-        'getArrivalAllInfo',
+        'getArrivalAllInfo', 'getArrivalAll'
       ])
     },
     methods: {
       ...mapActions([
-          'GET_ARRIVAL_ALL_INFO'
+          'GET_ARRIVAL_ALL_INFO', 'GET_ARRIVAL_ALL'
       ]),
      
     }

@@ -1,6 +1,7 @@
 <template>
     <q-page class="bg-grey-3">
         <div class="q-pa-md">
+          
             <q-expansion-item expand-separator icon="info" default-opened   header-class="bg-blue text-h6" dark :label="'Информация о лекарстве ' + getMedicines.title">
 
              <q-list bordered separator dense class="bg-white shadow-1">
@@ -53,12 +54,14 @@
              </q-list>
       </q-expansion-item>
 
-                   {{getMedicines}}
+                   <!-- {{getMedicines}} -->
             <div class="q-mt-md">
+              <q-btn push color="white" text-color="blue" icon="fas fa-arrow-left" 
+              class="q-mb-xs q-mr-xs" to="/medicines"/>
               <q-btn push color="white" text-color="primary" label="Добавить" class="q-mb-xs" :disable="loading"
                :to="{ name: 'add-info-medicine', params: {id: id}}"/>
             </div>
-            {{getBranches}}
+            <!-- {{getBranches}} -->
 
             <div class="q-mt-xs">
                 <q-table
@@ -84,15 +87,7 @@
                 </template>
                 <template v-slot:top="props">
                     <span class="text-h6">Товары с разной наценкой</span>
-                    <!-- <q-btn color="green" :disable="loading" label="Добавить" @click="addRow = !addRow" /> -->
-                    <!-- <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove row" @click="removeRow" /> -->
                     <q-space />
-                    <!-- <q-input borderless dense debounce="300" color="primary" v-model="filter"
-                    placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
-                    <template v-slot:append>
-                        <q-icon name="search" />
-                    </template>
-                    </q-input> -->
                     <q-btn
                     flat round dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -102,7 +97,7 @@
                 </template>
                 </q-table>
             </div>
-          {{data}}
+          <!-- {{data}} -->
 
             <div class="q-mt-md">
                 <q-table
@@ -126,15 +121,7 @@
                 </template>
                 <template v-slot:top="props">
                     <span class="text-h6">Лекарства в филиалах</span>
-                    <!-- <q-btn color="green" :disable="loading" label="Добавить" @click="addRow = !addRow" /> -->
-                    <!-- <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove row" @click="removeRow" /> -->
                     <q-space />
-                    <!-- <q-input borderless dense debounce="300" color="primary" v-model="filter"
-                    placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
-                    <template v-slot:append>
-                        <q-icon name="search" />
-                    </template>
-                    </q-input> -->
                     <q-btn
                     flat round dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -145,7 +132,7 @@
                 </q-table>
             </div>
 
-          {{getBranchesInMedInfoPage}}
+          <!-- {{getBranchesInMedInfoPage}} -->
 
         </div>
 
@@ -221,7 +208,6 @@ export default {
             distribution_branch: '',  
             distribution_options: [],
 
-          // this should be commented
             getMedicines: {title: '', barcode: '', country: '', manufacture: '', serial_code: '', vat: '', total_quantity: '', left_quantity: ''},
             pagination: {
               rowsPerPage: 8
@@ -255,30 +241,11 @@ export default {
 
                 { name: 'actions', label: 'Действия', field: '', align:'center' },
             ],
-            data: [
-              // {
-              //   "business_medicine_id":1,
-              //   "total_qauntity":1000,
-              //   "left_quantity": 200,
-              //   "purchase_price":1500,
-              //   "selling_price":1700,
-              //   "expire_date":"2020-08-30"
-              // }
-            ],  
-            data2: [
-
-            ]
-            
+            data: [],  
+            data2: [],
         }
     },
     watch:{ 
-      // 'distribution_amount.box': {
-      //   immediate: true,
-      //   async handler() {
-      //     await this.$nextTick();
-      //     this.$refs.form.validate();
-      //   }
-      // },
       'distribution_amount.box': function (newVal, oldVal){
          if(newVal < this.left_quantity_box){
            this.left_quantity_piece = Number(this.temp.capacity);
@@ -297,42 +264,6 @@ export default {
           this.distribution_amount.piece = 0
         }
       },
-      data: {
-        handler: function (val, oldVal) {
-          this.data.forEach((row, index) => {
-            row.index = index + 1
-          })
-          // let amount = [], left = [];
-          // for(let k = 0; k < this.getMedicinesInfo.results.length; k++){
-          //   let capacity = await this.getMedicinesInfo.results[k].capacity;
-          //   let total_quantity_box = await this.getMedicinesInfo.results[k].total_qauntity;
-          //   let total_quantity_piece = await this.getMedicinesInfo.results[k].total_quantity_piece;
-          //   let left_quantity_box = await this.getMedicinesInfo.results[k].left_quantity;
-          //   let left_quantity_piece = await this.getMedicinesInfo.results[k].left_quantity_piece;
-          //   left.push(left_quantity_box + ' упаковок ' +  '( по ' + capacity + ' )' + ' + ' + left_quantity_piece + ' шт');
-          //   amount.push(total_quantity_box + ' упаковок ' +  '( по ' + capacity + ' )' + ' + ' + total_quantity_piece + ' шт');
-          // }
-          // console.log(amount);
-
-          // this.data.forEach((row, index) => {
-          //   row.total_quantity = amount[index]
-          // })
-          // this.data.forEach((row, index) => {
-          //   row.left_quantity = left[index]
-          // })
-      
-        },
-        deep: true
-      },
-      data2: {
-        handler: function (val, oldVal) {
-          this.data2.forEach((row, index) => {
-            row.index = index + 1
-          })
-        },
-        deep: true
-      },
-
         
     },
     async mounted(){
@@ -366,12 +297,11 @@ export default {
       await this.GET_BRANCHES();
       this.distribution_options = await this.getBranchNames;
 
-   
       
     },
     computed:{
       ...mapGetters([
-        'getBranches', 'getUser', 'getMedicinesInfo', 'getBranchesInMedInfoPage'
+        'getBranches', 'getMedicinesInfo', 'getBranchesInMedInfoPage'
       ]),
       getBranchNames() {
         let a = [];
@@ -386,19 +316,6 @@ export default {
           'GET_MEDICINE_DETAIL', 'GET_MEDICINE_INFO', 'GET_BRANCHES', 'GET_BRANCHES_IN_MED_INFO_PAGE', 'ADD_TO_CART'
       ]),
       async addToCart(){
-        console.log(this.$refs.piece);
-        console.log(this.$refs.box);
-        this.$refs.box.valid
-        this.$refs.piece.valid
-        
-
-        if (this.$refs.box.hasError || this.$refs.piece.hasError) {
-          this.$q.notify({
-            color: 'negative',
-            message: 'Error!'
-          })
-        }
-        else {
           await this.$emit('medicines', true);
       
           const branch_id = this.getBranches.filter(el => el.name == this.distribution_branch);
@@ -427,7 +344,7 @@ export default {
           for(let i = 0; i < answer.data.results.length; i++ ){
             this.$set(this.data, this.data.length, answer.data.results[i]);
           }
-        }
+        
       },
       onReset () {
         this.distribution_branch = '';
@@ -436,13 +353,6 @@ export default {
         this.$refs.box.resetValidation()
         this.$refs.piece.resetValidation()
       }
-      // async getSearchResultByFilter(){
-      //   return await this.GET_SEARCH_RESULT(
-      //     {
-      //       title: this.filter
-      //     }
-      //   )
-      // },
     }
 }
 </script>

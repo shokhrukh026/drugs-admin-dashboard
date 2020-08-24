@@ -109,6 +109,11 @@ export default {
     Messages,
     EssentialLink
   },
+  meta () {
+      return {
+        title: 'UzPos Pharmacy'
+      }
+  },
   data() {
     return {
       cart: '0',
@@ -121,12 +126,9 @@ export default {
         {title: 'Возврат', icon: 'fas fa-exchange-alt', url: '/return'},
         {title: 'История', icon: 'fas fa-history', url: '/history'},
 
-        {title: 'Панель приборов', icon: 'fas fa-chart-pie ', url: '/medicines'},
-        {title: 'Лучшие продажи', icon: 'fas fa-chart-line', url: '/medicines'},
-        {title: 'Остаток средств', icon: 'fas fa-chart-bar', url: '/medicines'},
-
-
-
+        // {title: 'Панель приборов', icon: 'fas fa-chart-pie ', url: '/medicines'},
+        // {title: 'Лучшие продажи', icon: 'fas fa-chart-line', url: '/medicines'},
+        // {title: 'Остаток средств', icon: 'fas fa-chart-bar', url: '/medicines'},
       ]
 
     }

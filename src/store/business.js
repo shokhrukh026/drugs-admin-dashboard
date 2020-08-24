@@ -36,17 +36,20 @@ export default{
         SET_ARRIVAL_ALL: (state, payload) => {
           state.arrival_all = payload
           state.arrival_all.forEach((row, index) => {
-            row.index = index + 1
+            // row.index = index + 1
 
             if(row.is_received == false){
-              row.is_received = 'ложь'
+              row.is_received = 'Непринято'
             }else if(row.is_received == true){
-              row.is_received = 'правда'
+              row.is_received = 'Принято'
             }
           })
         },
         SET_ARRIVAL_ALL_INFO: (state, payload) => {
-          state.arrival_all_info = payload
+          state.arrival_all_info = payload;
+          state.arrival_all_info.forEach((row, index) => {
+            row.index = index + 1
+          })
         },
         SET_SHOPPING_CART_MEDICINES: (state, payload) => {
           state.shopping_cart = payload;
@@ -56,6 +59,15 @@ export default{
         },
         SET_BRANCHES: (state, payload) => {
           state.branches = payload;
+          state.branches.forEach((row, index) => {
+            row.index = index + 1
+
+            if(row.status == false){
+              row.status = 'Неактивный'
+            }else if(row.status == true){
+              row.status = 'Активный'
+            }
+          })
         },
         SET_MEDICINES: (state, payload) => {
           // let array = payload;
@@ -71,15 +83,55 @@ export default{
           state.medicines_by_branch.results.forEach((row, index) => {
             row.index = index + 1
           })
+
+          // state.medicines_by_branch.results.forEach((row, index) => {
+          //   delete row.index;
+          // })
+
+          // let results = payload.results
+
+          // if(results.length != 0){
+          //   state.medicines_by_branch.results.forEach((row, index) => {
+              
+          //     for(let a = 0; a < results.length; a++){
+          //       if(lodash.isEqual(row, results[a])){
+          //         console.log('it is equal!');
+          //         results.splice(a, 1);
+          //       }
+          //     }
+              
+            
+          //   })
+          //    if(results){
+          //     for(let i = 0; i < results.length; i++){
+          //       Vue.set(state.medicines_by_branch.results, state.medicines_by_branch.results.length, results[i]);
+          //     }
+          //    }
+          // }else{
+          //   console.log('Array is empty!')
+          // }
+
+          // state.medicines_by_branch.results.forEach((row, index) => {
+          //   row.index = index + 1
+          // })
+
+
+
         },
         SET_MEDICINES_DETAIL_INFO: (state, payload) => {
           state.medicine_info = payload;
+          state.medicine_info.results.forEach((row, index) => {
+            row.index = index + 1
+          })
         },
         SET_MEDICINE_DETAILS: (state, payload) => {
           state.medicine_details = payload;
         },
         SET_BRANCHES_IN_MED_INFO_PAGE: (state, payload) => {
           state.branches_in_med_info_page = payload;
+          state.branches_in_med_info_page.forEach((row, index) => {
+            row.index = index + 1
+          })
         },
         SET_BRANCH_MEDICINE_DETAIL: (state, payload) => {
           state.branch_medicine_detail = payload;
@@ -281,7 +333,7 @@ export default{
         async GET_SEARCH_RESULT_BY_BRANCH({commit, getters},payload) {
           return await axios({
               method: "GET",
-              url: '/api/v1/branches/' + payload.virtual_number + '/medicines/?search=' + payload.title,
+              url: '/api/v1/branch/' + payload.virtual_number + '/medicines/?search=' + payload.title,
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {
@@ -370,8 +422,6 @@ export default{
             //   return error;
             })
         },
-        // http://127.0.0.1:8000/v1/branch/2333/business_medicine/1/branch_medicine_info/
-    
         async GET_SEARCH_RESULT_ADD_MEDICINE({commit, getters},payload) {
            return await axios({
               method: "GET",
@@ -406,11 +456,12 @@ export default{
            //   return error;
            })
        },
-
         async GET_NEXT_PAGE({commit, getters},payload) {
+          let url = getters.getMedicines.links.next;
+          url = url.replace("http://dev.epos.uz/", "/api/");
           return await axios({
               method: "GET",
-              url: getters.getMedicines.links.next,
+              url: url,
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {
@@ -418,7 +469,6 @@ export default{
                //return e;
             })
             .catch((error) => {
-              console.log(getters.getMedicines.links.next);
               console.log(error);
               //   return error;
             })
@@ -611,7 +661,10 @@ export default{
             url: baseUrl + 'refund/add/',
             headers: {Authorization: getters.getUser.token},
             data:{
-              send: 'True'
+              business_medicine_info_id: payload.business_medicine_info_id,
+              quantity_box: payload.quantity_box,
+              quantity_piece: payload.quantity_piece,
+              branch_id: payload.branch_id,
             }
           })
           .then((e) => {

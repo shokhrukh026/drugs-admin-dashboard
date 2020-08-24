@@ -22,8 +22,6 @@
             </template>
             <template v-slot:top="props">
                 <span class="text-h6">История возвратов</span>
-                <!-- <q-btn color="green" :disable="loading" label="Добавить" @click="addRow = !addRow" /> -->
-                <!-- <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove row" @click="removeRow" /> -->
                 <q-space />
                 <q-input borderless dense debounce="300" color="primary" v-model="filter"
                   placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
@@ -31,14 +29,7 @@
                       <q-icon name="search" />
                   </template>
                 </q-input>
-               <!-- <form @submit.prevent.stop="getSearchResultByFilter"  class="row">
-                  <q-input square borderless dense debounce="500" color="primary" v-model="filter"  
-                  placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; min-width: 20vw;">
-                  </q-input>
-                  <q-btn flat square color="white" class="bg-blue" style="border-radius: 0px;" type="submit">
-                    <q-icon name="search" />  
-                  </q-btn>
-                </form> -->
+             
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -48,7 +39,7 @@
             </template>
             </q-table>
         </div>
-        {{data}}
+        <!-- {{data}} -->
     </q-page>
 </template>
 
@@ -59,41 +50,30 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
       return {
-      rowsNumber: '',
-      pagination: {
-        rowsPerPage: 8
-      },
-      row: {
-        index: '',
-        branch_name: '',
-        city: '',
-        owner: '',
-        status: '',
-      },
-      loading: false,
-      filter: '',
-      columns: [
-        { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true},
-        { name: 'title', align: 'center', label: 'Название', field: 'title', sortable: true },
-        { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
-        { name: 'country', align: 'center', label: 'Страна', field: 'country', sortable: true },
-        { name: 'manufacture', align: 'center', label: 'Производитель', field: 'manufacture', sortable: true },
-        { name: 'serial_code', align: 'center', label: 'Серийный номер', field: 'serial_code', sortable: true },
-        { name: 'capacity', align: 'center', label: 'Вместимость', field: 'capacity', sortable: true },
-        { name: 'quantity', align: 'center', label: 'Кол-во', field: 'quantity', sortable: true },
-        { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
-        { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
-        { name: 'expire_date', align: 'center', label: 'Годен до', field: 'expire_date', sortable: true },
-        { name: 'vat', align: 'center', label: 'Ндс', field: 'vat', sortable: true },
-        { name: 'description', align: 'center', label: 'Описание', field: 'description', sortable: true },
+        rowsNumber: '',
+        pagination: {
+          rowsPerPage: 8
+        },
+        loading: false,
+        filter: '',
+        columns: [
+          { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true},
+          { name: 'title', align: 'center', label: 'Название', field: 'title', sortable: true },
+          { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
+          { name: 'country', align: 'center', label: 'Страна', field: 'country', sortable: true },
+          { name: 'manufacture', align: 'center', label: 'Производитель', field: 'manufacture', sortable: true },
+          { name: 'serial_code', align: 'center', label: 'Серийный номер', field: 'serial_code', sortable: true },
+          { name: 'capacity', align: 'center', label: 'Вместимость', field: 'capacity', sortable: true },
+          { name: 'vat', align: 'center', label: 'Ндс', field: 'vat', sortable: true },
+          { name: 'quantity', align: 'center', label: 'Кол-во', field: 'quantity', sortable: true },
+          { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
+          { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
+          { name: 'expire_date', align: 'center', label: 'Годен до', field: 'expire_date', sortable: true },
 
 
-        { name: 'actions', label: 'Действия', field: '', align:'center' },
-      ],
-      data: [
-          // {index: 1, medicine_name: 'Ношпа', quantity: '10', price: '400000'},
-          // {index: 2, medicine_name: 'Ношпа', quantity: '15', price: '400000'},
-      ],
+          { name: 'actions', label: 'Действия', field: '', align:'center' },
+        ],
+        data: [],
       }
     },
     watch:{
@@ -112,14 +92,6 @@ export default {
       ...mapActions([
           'GET_REFUNDS_LIST'
       ]),
-      // async getSearchResultByFilter(){
-      //   return await this.GET_SEARCH_RESULT_BY_BRANCH(
-      //     {
-      //       virtual_number: this.id,
-      //       title: this.filter
-      //     }
-      //   )
-      // },
     }
 }
 </script>

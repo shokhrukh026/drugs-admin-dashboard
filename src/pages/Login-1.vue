@@ -75,8 +75,8 @@ export default {
     data() {
         return {
             isPwd: true,
-            username: 'admin',
-            password: 'admin',
+            username: '',
+            password: '',
             error: false,
         }
     },
@@ -117,8 +117,7 @@ export default {
           this.error = true;
         } 
       },
-
-
+      
     }
 }
 </script>

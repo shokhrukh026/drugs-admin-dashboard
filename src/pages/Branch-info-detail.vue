@@ -44,20 +44,13 @@
                    <q-item-label class="text-h6 text-blue-9">Общее количество в филиале: <span class="text-subtitle1 text-black">&nbsp;{{getMedicines.total_quantity}}</span></q-item-label>
                  </q-item-section>
                </q-item>
-               <!-- <q-item v-ripple >
-                 <q-item-section>
-                   <q-item-label class="text-h6 text-blue-9">Оставшееся количество в бизнесе: <span class="text-subtitle1 text-black">{{getMedicines.left_quantity}}</span></q-item-label>
-                 </q-item-section>
-               </q-item> -->
-                
              </q-list>
       </q-expansion-item>
 
-                   {{getBranchMedicineDetail}}
-            <!-- <div class="q-mt-md">
-              <q-btn push color="white" text-color="primary" label="Добавить" class="q-mb-xs" :disable="loading"
-               :to="{ name: 'add-info-medicine', params: {id: id}}"/>
-            </div> -->
+                   <!-- {{getBranchMedicineDetail}} -->
+
+            <q-btn push color="white" text-color="blue" icon="fas fa-arrow-left" 
+              class="q-mt-md q-mr-xs" :to="{ name: 'branch-info', params: {id: branch_id, row: row}}"/>
 
             <div class="q-mt-xs">
                 <q-table
@@ -83,8 +76,6 @@
                 </template>
                 <template v-slot:top="props">
                     <span class="text-h6">Товары с разной наценкой</span>
-                    <!-- <q-btn color="green" :disable="loading" label="Добавить" @click="addRow = !addRow" /> -->
-                    <!-- <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove row" @click="removeRow" /> -->
                     <q-space />
                     <q-input borderless dense debounce="300" color="primary" v-model="filter"
                     placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
@@ -101,52 +92,6 @@
                 </template>
                 </q-table>
             </div>
-
-
-
-            <!-- <div class="q-mt-md">
-                <q-table
-                dense
-                title="Покупатели"
-                :data="data2"
-                :columns="columns2"
-                row-key="index"  
-                :filter="filter"
-                :loading="loading"
-                separator="cell"
-                :pagination.sync="pagination"
-                :rows-per-page-options="[0]"
-                :pagination-label="(firstRowIndex, endRowIndex, totalRowsNumber) => firstRowIndex + '-' + endRowIndex + ' из ' + rowsNumber2"
-                >
-                <template v-slot:body-cell-actions="props">
-                    <q-td :props="props">
-                        <q-btn dense round flat color="grey" to="/branch-update" icon="edit"></q-btn>
-                        <q-btn dense round flat color="grey" to="/branch-info" icon="fas fa-info-circle"></q-btn>
-                    </q-td>
-                </template>
-                <template v-slot:top="props">
-                    <span class="text-h6">Лекарства в филиалах</span>
-                    <q-btn color="green" :disable="loading" label="Добавить" @click="addRow = !addRow" />
-                    <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove row" @click="removeRow" />
-                    <q-space />
-                    <q-input borderless dense debounce="300" color="primary" v-model="filter"
-                    placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
-                    <template v-slot:append>
-                        <q-icon name="search" />
-                    </template>
-                    </q-input>
-                    <q-btn
-                    flat round dense
-                    :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                    @click="props.toggleFullscreen"
-                    class="q-ml-md"
-                    />
-                </template>
-                </q-table>
-            </div> -->
-
-
-
         </div>
 
 
@@ -158,15 +103,14 @@
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                <!-- <q-select outlined v-model="distribution_branch" :options="distribution_options" label="Филиал" class="q-mb-sm"/> -->
                 <div class="row">
-                  <q-input outlined v-model="distribution_amount" label="Кол-во упаковок" class="q-mr-xs col" :suffix="String(temp_total_quantity)" 
+                  <q-input outlined v-model="distribution_amount.box" label="Кол-во упаковок" class="q-mr-xs col" :suffix="String(temp_total_quantity)" 
                   :rules="[
-                    val => val > 0 && val <= temp_total_quantity || 'В складе имеется ' + temp_total_quantity + ' упаковок'
+                    val => val >= 0 && val <= temp_total_quantity || 'В складе имеется ' + temp_total_quantity + ' упаковок'
                   ]"/>
-                  <q-input outlined v-model="distribution_amount" label="Кол-во штук" class="col" :suffix="String(temp_total_piece)" 
+                  <q-input outlined v-model="distribution_amount.piece" label="Кол-во штук" class="col" :suffix="String(temp_total_piece)" 
                   :rules="[
-                    val => val > 0 && val <= temp_total_piece || 'В складе имеется ' + temp_total_piece + ' штук'
+                    val => val >= 0 && val <= temp_total_piece || 'В складе имеется ' + temp_total_piece + ' штук'
                   ]"/>
                 </div>
                 
@@ -175,11 +119,12 @@
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">
                  <q-btn flat label="Отменить" v-close-popup />
-                 <q-btn flat label="Добавить" @click="addToCart"/>
+                 <q-btn flat label="Добавить" @click="addRefunds"/>
+                 {{temp}}
                </q-card-actions>
              </q-card>
            </q-dialog>
-        {{getBranchMedicineInfo}}
+        <!-- {{getBranchMedicineInfo}} -->
     </q-page>
 </template>
 
@@ -194,6 +139,9 @@ export default {
       },
       branch_id: {
         required: true
+      },
+      row: {
+        required: true
       }
     },
     data(){
@@ -206,7 +154,7 @@ export default {
             temp_total_piece: '',
             temp_already_added: '',
             addRow: false,
-            distribution_amount: '',
+            distribution_amount: {box: '', piece: ''},
             distribution_branch: '',  
             distribution_options: [],
 
@@ -220,29 +168,12 @@ export default {
             columns: [
                 { name: 'index', align: 'center', label: '№', field: 'index', sortable: true},
                 { name: 'expire_date', align: 'center', label: 'Годен до', field: 'expire_date', sortable: true },
-
                 { name: 'quantity', align: 'center', label: 'Кол-во', field: 'quantity', sortable: true },
-                // { name: 'left_quantity', align: 'center', label: 'Остаток', field: 'left_quantity', sortable: true },
                 { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
                 { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
-
                 { name: 'actions', label: 'Действия', field: '', align:'center' },
             ],
-
-
-
-            data: [
-              // {
-              //   "business_medicine_id":1,
-              //   "total_qauntity":1000,
-              //   "left_quantity": 200,
-              //   "purchase_price":1500,
-              //   "selling_price":1700,
-              //   "expire_date":"2020-08-30"
-              // }
-            ],  
-            
-            
+            data: [],  
         }
     },
     watch:{ 
@@ -252,9 +183,11 @@ export default {
       addRow: async function(newVal, oldVal){
         if(newVal == true){
           let a = await this.GET_CHECK_FOR_REFUND({ branch_id: this.branch_id, med_info_id: this.business_medicine_id});
-          a.limit_quantity = 56;
-          a.capacity = 1;
-          a.already_added = 0;
+          // a.limit_quantity = 56;
+          // a.capacity = 5;
+          // a.already_added = 10;
+          // console.log(a);
+
           this.temp_total_quantity = Math.floor(a.limit_quantity / a.capacity);
           this.temp_total_piece = a.limit_quantity % a.capacity;
           if(a.already_added != 0){
@@ -272,7 +205,7 @@ export default {
     },
     async mounted(){
       const details = await this.GET_BRANCH_MEDICINE_DETAIL({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
-      console.log(details);
+      //console.log(details);
       this.getMedicines.title = details.data.title;
       this.getMedicines.description = details.data.description;
       this.getMedicines.barcode = details.data.barcode;
@@ -281,7 +214,6 @@ export default {
       this.getMedicines.serial_code = details.data.serial_code;
       this.getMedicines.vat = details.data.vat; 
       this.getMedicines.total_quantity = details.data.total_quantity
-      // this.getMedicines.total_quantity = details.data.total_quantity_box + ' упаковок ( по ' + details.data.capacity + ' ) + ' + details.data.total_quantity_piece + ' шт';
 
 
 
@@ -291,14 +223,6 @@ export default {
       for(let i = 0; i < answer.data.results.length; i++ ){
         this.$set(this.data, this.data.length, answer.data.results[i]);
       }
-      
-      // const answer2 = await this.GET_BRANCHES_IN_MED_INFO_PAGE({id: this.id});
-      // console.log(answer2.data);
-      // // this.rowsNumber2 = answer2.data.count;
-      // for(let i = 0; i < answer2.data.length; i++ ){
-      //   this.$set(this.data2, this.data2.length, answer2.data[i]);
-      // }
-
 
       await this.GET_BRANCHES();
       this.distribution_options = await this.getBranchNames;
@@ -318,19 +242,19 @@ export default {
     },
     methods: {
       ...mapActions([
-          'GET_BRANCHES', 'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND'
+          'GET_BRANCHES', 'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND', 'ADD_REFUND'
       ]),
-      async addToCart(){
-        let data = { id: this.id, branch: this.distribution_branch, amount: this.distribution_amount }
-        await this.$emit('medicines', data);
+      async addRefunds(){
+        if(this.distribution_amount.box == ''){
+          this.distribution_amount.piece = 0;
+        }else if(this.distribution_amount.piece == ''){
+          this.distribution_amount.piece = 0;
+        }
+        
+        await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.business_medicine_id, 
+        quantity_box: this.distribution_amount.box, quantity_piece: this.distribution_amount.piece})
       },
-      // async getSearchResultByFilter(){
-      //   return await this.GET_SEARCH_RESULT(
-      //     {
-      //       title: this.filter
-      //     }
-      //   )
-      // },
+      
     }
 }
 </script>
