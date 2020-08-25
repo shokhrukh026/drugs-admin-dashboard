@@ -107,7 +107,7 @@
                 :columns="columns2"
                 row-key="index"  
                 :filter="filter"
-                :loading="loading"
+                :loading="loading2"
                 separator="cell"
                 :pagination.sync="pagination"
                 :rows-per-page-options="[0]"
@@ -213,6 +213,7 @@ export default {
               rowsPerPage: 8
             },
             loading: false,
+            loading2: false,
             filter: '',
             columns: [
                 { name: 'index', align: 'center', label: '№', field: 'index', sortable: true},
@@ -279,20 +280,24 @@ export default {
       this.getMedicines.left_quantity = details.data.left_quantity;
 
 
-
+      this.loading = true;
       const answer = await this.GET_MEDICINE_INFO({id: this.id});
       // console.log(answer.data);
       this.rowsNumber = answer.data.count;
       for(let i = 0; i < answer.data.results.length; i++ ){
         this.$set(this.data, this.data.length, answer.data.results[i]);
       }
+      this.loading = false;
       
+
+
+      this.loading2 = true;
       const answer2 = await this.GET_BRANCHES_IN_MED_INFO_PAGE({id: this.id});
       // console.log(answer2.data);
       for(let i = 0; i < answer2.data.length; i++ ){
         this.$set(this.data2, this.data2.length, answer2.data[i]);
       }
-
+      this.loading2 = false;
 
       await this.GET_BRANCHES();
       this.distribution_options = await this.getBranchNames;

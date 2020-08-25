@@ -134,7 +134,6 @@
            </div>
               
         </div>
-
     </q-page>
 </template>
 
@@ -208,15 +207,21 @@ export default {
             selling_price: this.medicine_info_add[i].selling_price,
             expire_date: this.medicine_info_add[i].expire_date,
           })
-          this.medicine_info_add[i] = {quantity: '', piece: '', purchase_price: '', selling_price: '', expire_date: ''}
-          // if(response == false){
-            
-          // }
+          this.$set(this.medicine_info_add, i, {quantity: '', piece: '', purchase_price: '', selling_price: '', expire_date: ''});
         }
-        this.$q.notify({
-          message: 'Успешно добавлено!',
-          color: 'green'
-        })
+
+        if(response.status == 'SUCCESS'){
+          this.$q.notify({
+            message: 'Успешно добавлено!',
+            color: 'green'
+          })
+        }else{
+          this.$q.notify({
+            message: 'Ошибка!',
+            color: 'negative'
+          })
+        }
+
       },
 
 

@@ -82,8 +82,10 @@ export default {
   
     },
     async mounted(){
+      this.loading = true;
       await this.GET_ARRIVAL_ALL_INFO({arrival_id: Number(await this.id)});
       this.data = await this.getArrivalAllInfo;
+      this.loading = false;
 
       if(this.getArrivalAll.length == 0){
           await this.GET_ARRIVAL_ALL();

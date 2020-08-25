@@ -146,9 +146,11 @@ export default {
         },
     },
     async mounted(){
+      this.loading = true;
       await this.GET_MEDICINES();
       this.rowsNumber = await this.getMedicines.count;
       this.data = await this.getMedicines.results;
+      this.loading = false;
     },
     computed:{
       ...mapGetters([

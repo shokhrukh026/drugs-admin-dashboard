@@ -80,8 +80,9 @@ export default {
   
     },
     async mounted(){
+      this.loading = true;
       this.data = await this.GET_REFUNDS_LIST();
-      
+      this.loading = false;
     },
     computed:{
       ...mapGetters([

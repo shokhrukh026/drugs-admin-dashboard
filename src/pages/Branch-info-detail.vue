@@ -124,7 +124,7 @@
                </q-card-actions>
              </q-card>
            </q-dialog>
-        <!-- {{getBranchMedicineInfo}} -->
+        {{getBranchMedicineInfo}}
     </q-page>
 </template>
 
@@ -216,13 +216,14 @@ export default {
       this.getMedicines.total_quantity = details.data.total_quantity
 
 
-
+      this.loading = true;
       const answer = await this.GET_BRANCH_MEDICINE_INFO({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
-      console.log(answer.data);
+      // console.log(answer.data);
       this.rowsNumber = answer.data.count;
       for(let i = 0; i < answer.data.results.length; i++ ){
         this.$set(this.data, this.data.length, answer.data.results[i]);
       }
+      this.loading = false;
 
       await this.GET_BRANCHES();
       this.distribution_options = await this.getBranchNames;

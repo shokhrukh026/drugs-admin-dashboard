@@ -24,7 +24,7 @@
                 </q-td>
             </template>
             <template v-slot:top="props">
-                <span class="text-h6">Лекарства в {{row.name}}</span>
+                <span class="text-h6">Лекарства в {{branch_name.name}}</span>
                 <q-space />
                <form @submit.prevent.stop="getSearchResultByFilter"  class="row">
                   <q-input square borderless dense debounce="500" color="primary" v-model="filter"  
@@ -43,6 +43,7 @@
             </template>
             </q-table>
         </div>
+        {{row}}
         <!-- {{getMedicinesByBranch}} -->
     </q-page>
 </template>
@@ -64,6 +65,7 @@ export default {
       pagination: {
         rowsPerPage: 8
       },
+      branch_name: this.row ? this.row : '',
       loading: false,
       filter: '',
       columns: [
@@ -88,12 +90,26 @@ export default {
      
     },
     async mounted(){
-      await this.GET_BRANCHES();
+      if(this.getBranches.length == 0){
+        await this.GET_BRANCHES();
+      }
+      let name = await this.getBranches.filter(obj => {
+        return obj.id == this.id
+      })
+      this.branch_name = name[0]
+      
+
+
+      this.loading = true;
       const answer = await this.GET_MEDICINES_BY_BRANCH({virtual_number: this.id});
-      console.log(answer);
+      //console.log(answer);
       for(let i = 0; i < answer.data.results.length; i++ ){
         this.$set(this.data, this.data.length, answer.data.results[i]);
       }
+      this.loading = false;
+
+
+
     },
     computed:{
       ...mapGetters([

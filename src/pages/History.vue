@@ -87,7 +87,9 @@ export default {
   
     },
     async mounted(){
+      this.loading = true;
       this.data = await this.GET_ARRIVAL_ALL();
+      this.loading = false;
     },
     computed:{
       ...mapGetters([

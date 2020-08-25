@@ -410,7 +410,6 @@ export default{
           return await axios({
               method: "GET",
               url: '/api/v1/branch/' + payload.branch_id + '/business_medicine/' + payload.business_medicine_id + '/branch_medicine_info/',
-              // url: baseUrl + getters.getUser.business_id + '/medicine/' + payload.id + '/branches/',  // payload.business_medicine_id   
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {
@@ -425,7 +424,6 @@ export default{
         async GET_SEARCH_RESULT_ADD_MEDICINE({commit, getters},payload) {
            return await axios({
               method: "GET",
-              // url: baseUrl + getters.getUser.business_id + '/medicines/?search=' + payload.title,
               url: '/api/v1/medicine/list/?' + payload.type + '=' + payload.value,
               headers: {Authorization: getters.getUser.token}
             })
@@ -443,11 +441,9 @@ export default{
           return await axios({
              method: "GET",
              url: baseUrl + 'medicines/?search=' + payload.value,
-             //url: 'http://dev.epos.uz/v1/medicine/list?' + payload.type + '=' + payload.value,
              headers: {Authorization: getters.getUser.token}
            })
            .then((e) => {
-             //console.log(e.data);
              commit('SET_SEARCH_RESULT_ALL_MEDICINES', e.data);
              return e.data;
            })
@@ -563,6 +559,21 @@ export default{
             //   return error;
             })
         },
+        async GET_MONITORING_BAR_CHART({commit, getters},payload) {
+          return await axios({
+              method: "GET",
+              url: '/api/monitoring/business/',
+              headers: {Authorization: getters.getUser.token}
+            })
+            .then((e) => {
+              //commit('SET_MONITORING_PERIOD', e.data);
+               return e.data;
+            })
+            .catch((error) => {
+              console.log(error);
+            //   return error;
+            })
+        },
         async ADD_MEDICINES({commit, getters}, payload) {
           return await axios({
               method: "POST",
@@ -609,7 +620,7 @@ export default{
             })
             .then((e) => {
               console.log('Successfully added info about medicines!')
-            //   return e;
+              return e.data;
             })
             .catch((error) => {
               console.log(error);
