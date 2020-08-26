@@ -91,9 +91,8 @@ export default {
     data(){
       return {
         scan: false,
-        response: [],
         pagination: {
-          rowsPerPage: 5,
+          rowsPerPage: 9,
           page: 1,
         },
         rowsNumber: null,
@@ -118,7 +117,6 @@ export default {
           { name: 'actions', label: 'Действия', field: '', align:'center' },
         ],
         data: [],
-        data2: [{}],
       }
     },
     watch: {
@@ -126,13 +124,6 @@ export default {
          if(newVal == this.pagesNumber){
            await this.GET_NEXT_PAGE();
          }
-        },
-       'medicine_add.title': function (newVal, oldVal) {
-          if (newVal != '') {
-              for(let u = 0; u < this.response.length; u++){
-                this.$set(this.data2, u, this.response[u])
-              }
-          }
         },
         filter: async function(newVal, oldVal) {
           if(this.scan == false){
@@ -163,7 +154,7 @@ export default {
     },
     methods: {
       ...mapActions([
-        'GET_MEDICINES', 'GET_NEXT_PAGE', 'GET_SEARCH_RESULT_ALL_MEDICINES', 'GET_SEARCH_RESULT_ADD_MEDICINE'
+        'GET_MEDICINES', 'GET_NEXT_PAGE', 'GET_SEARCH_RESULT_ALL_MEDICINES'
       ]),
   
       async getSearchResultByFilter(){
@@ -184,23 +175,7 @@ export default {
         this.editRowVar = !this.editRowVar
       },
 
-       async filterTitle (val, update, abort) {
-        if(val.length >= 2){
-          await update(async () => {
-            this.loading = true;
-            const needle = val;
-            this.response = await this.GET_SEARCH_RESULT_ADD_MEDICINE({value: needle, type: 'title'});
-            console.log(this.response);
-            for(let i = 0; i < this.response.length; i++){
-              await this.$set(this.title_options, i, this.response[i].title);
-            }
-            if(this.response.length == 0){
-              console.log('Array is empty!');
-            }
-            this.loading = false;
-          })
-        }
-      },
+     
 
     }
 }

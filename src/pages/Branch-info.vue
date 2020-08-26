@@ -43,7 +43,7 @@
             </template>
             </q-table>
         </div>
-        {{row}}
+        <!-- {{row}} -->
         <!-- {{getMedicinesByBranch}} -->
     </q-page>
 </template>

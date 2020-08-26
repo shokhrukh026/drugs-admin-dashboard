@@ -428,7 +428,6 @@ export default{
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {
-              console.log(e.data.data);
               //commit('SET_SEARCH_RESULT_ADD_MEDICINE', e.data.data);
                return e.data.data;
             })
@@ -597,7 +596,7 @@ export default{
             })
             .then((e) => {
               console.log('Successfully added medicines!')
-               return true;
+               return e.data;
             })
             .catch((error) => {
               console.log(error);
