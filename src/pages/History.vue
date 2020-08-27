@@ -18,7 +18,7 @@
                 <q-td :props="props">
                     <q-btn dense round flat color="grey" @click="editRow(props)" icon="edit"></q-btn>
                     <q-btn dense round flat color="grey" :to="{ name: 'history-info', params: {id: props.row.id}}"  icon="fas fa-info-circle"></q-btn>
-                    <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete" v-if="props.row.is_received == 'ложь'"></q-btn>
+                    <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete" v-if="props.row.is_received == 'Непринято'"></q-btn>
                 </q-td>
             </template>
             <template v-slot:top="props">
@@ -36,13 +36,13 @@
         <!-- {{data}} -->
 
          <q-dialog v-model="deleteRowVar">
-             <q-card style="width: 300px">
-               <q-card-section class="bg-warning">
+             <q-card>
+               <q-card-section class="bg-negative">
                  <div class="text-h6 text-white">Удаление</div>
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                 Вы всерьёз хотите удалить строку?
+                 Вы всерьёз хотите удалить историю?
                </q-card-section>
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">
@@ -101,12 +101,24 @@ export default {
           'GET_ARRIVAL_ALL', 'DELETE_ARRIVAL_FROM_HISTORY'
       ]),
       deleteRow(props){
-        console.log(props.row);
+        // console.log(props.row);
         this.rowDelete = props.row
         this.deleteRowVar = !this.deleteRowVar
       },
       async deleteArrival(){
-        await this.DELETE_ARRIVAL_FROM_HISTORY({arrival_id: this.rowDelete.id});
+        let response = await this.DELETE_ARRIVAL_FROM_HISTORY({arrival_id: this.rowDelete.id});
+        console.log(response);
+        if(response.success == true){
+          this.$q.notify({
+            message: 'Успешно удалено!',
+            color: 'green'
+          })
+        }else{
+          this.$q.notify({
+            message: 'Ошибка!',
+            color: 'negative'
+          })
+        }
         this.data = [];
         this.data = await this.GET_ARRIVAL_ALL();
       }

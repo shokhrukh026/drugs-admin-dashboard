@@ -67,7 +67,7 @@
 <!-- {{getMedicineDetails}} -->
           
 
-          <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" v-for="(medInfo,item) in medicine_info_add" :key="item">
+          <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 q-mt-xs" v-for="(medInfo,item) in medicine_info_add" :key="item">
              <q-card class="card-bg text-black">
                <q-card-section class="text-h6 bg-blue row justify-between">
                  <div>
@@ -162,18 +162,11 @@ export default {
     },
     async mounted(){
 
-      const answer = await this.GET_MEDICINE_DETAIL({id: this.id});
-      
-      this.getMedicines.title = answer.data.title;
-      this.getMedicines.description = answer.data.description;
-      this.getMedicines.barcode = answer.data.barcode;
-      this.getMedicines.country = answer.data.country;
-      this.getMedicines.manufacture = answer.data.manufacture;
-      this.getMedicines.serial_code = answer.data.serial_code;
-      this.getMedicines.vat = answer.data.vat;
-      this.getMedicines.total_quantity = answer.data.total_quantity;
-      this.getMedicines.left_quantity = answer.data.left_quantity;
-      this.getMedicines.capacity = answer.data.capacity;
+      const details = await this.GET_MEDICINE_DETAIL({id: this.id});
+      console.log(details);
+      Object.assign(this.getMedicines, {title: details.title, description: details.description, barcode: details.barcode,
+       country: details.country, manufacture: details.manufacture, serial_code: details.serial_code,vat: details.vat,
+        total_quantity: details.total_quantity, left_quantity: details.left_quantity, capacity: details.capacity});
 
       if(this.getMedicines.capacity <= 1){
         this.medicine_info_add[0].piece = 0; 

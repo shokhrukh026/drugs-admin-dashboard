@@ -20,7 +20,7 @@
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
                     <q-btn dense round flat color="grey" @click="editRow(props)" icon="edit"></q-btn>
-                    <q-btn dense round flat color="grey" :to="{ name: 'branch-info-detail', params: {business_medicine_id: props.row.business_medicine_id, branch_id: id, row: row,}}"  icon="fas fa-info-circle"></q-btn>
+                    <q-btn dense round flat color="grey" :to="{ name: 'branch-info-detail', params: {business_medicine_id: props.row.business_medicine_id, branch_id: id}}"  icon="fas fa-info-circle"></q-btn>
                 </q-td>
             </template>
             <template v-slot:top="props">
@@ -43,7 +43,7 @@
             </template>
             </q-table>
         </div>
-        <!-- {{row}} -->
+        <!-- {{data}} -->
         <!-- {{getMedicinesByBranch}} -->
     </q-page>
 </template>
@@ -80,10 +80,7 @@ export default {
         { name: 'sold_quantity', align: 'center', label: 'Продажи за 30 дней', field: 'sold_quantity', sortable: true },
         { name: 'actions', label: 'Действия', field: '', align:'center' },
       ],
-      data: [
-          // {index: 1, medicine_name: 'Ношпа', quantity: '10', price: '400000'},
-          // {index: 2, medicine_name: 'Ношпа', quantity: '15', price: '400000'},
-      ],
+      data: [],
       }
     },
     watch:{
@@ -102,9 +99,10 @@ export default {
 
       this.loading = true;
       const answer = await this.GET_MEDICINES_BY_BRANCH({virtual_number: this.id});
-      //console.log(answer);
-      for(let i = 0; i < answer.data.results.length; i++ ){
-        this.$set(this.data, this.data.length, answer.data.results[i]);
+      // console.log(answer);
+      this.rowsNumber = answer.count;
+      for(let i = 0; i < answer.results.length; i++ ){
+        this.$set(this.data, this.data.length, answer.results[i]);
       }
       this.loading = false;
 

@@ -8,7 +8,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       // {path: '', component: () => import('pages/Dashboard.vue'), beforeEnter: AuthGuard},
-      {path: '/', component: () => import('pages/Dashboard2.vue'), meta: {authRequired: true}},
+      {path: '/', component: () => import('pages/Dashboard.vue'), meta: {authRequired: true}},
       {path: '/branches', name: 'branches', component: () => import('pages/Branches.vue'), meta: {authRequired: true}},
       {path: '/medicines', component: () => import('pages/Medicines.vue'), meta: {authRequired: true}},
       {path: '/history', component: () => import('pages/History.vue'), meta: {authRequired: true}},
@@ -22,40 +22,8 @@ const routes = [
       {path: '/add-info-medicine/:id', name: 'add-info-medicine', component: () => import('pages/Add-info-medicine.vue'), props: true, meta: {authRequired: true}},
       {path: '/edit-product/:id', name: 'edit-product', component: () => import('pages/Edit-product.vue'), props:true, meta: {authRequired: true}},
       {path: '/shopping-cart', component: () => import('pages/ShoppingCart.vue'), meta: {authRequired: true}},
-      
-
-      {path: '/Profile', component: () => import('pages/UserProfile.vue')},
-      {path: '/Map', component: () => import('pages/Map.vue')},
-      {path: '/MapMarker', component: () => import('pages/MapMarker.vue')},
-      {path: '/StreetView', component: () => import('pages/StreetView.vue')},
-      {path: '/TreeTable', component: () => import('pages/TreeTable.vue')},
-      {path: '/Charts', component: () => import('pages/Charts.vue')},
-      {path: '/Cards', component: () => import('pages/Cards.vue')},
-      {path: '/Tables', component: () => import('pages/Tables.vue')},
-      {path: '/Contact', component: () => import('pages/Contact.vue')},
-      {path: '/Checkout', component: () => import('pages/Checkout.vue')},
-      {path: '/Calendar', component: () => import('pages/Calendar.vue')},
-      {path: '/Pagination', component: () => import('pages/Pagination.vue')},
-      {path: '/Taskboard', component: () => import('pages/TaskBoard.vue')},
     ]
   },
-  {
-    path: '/Lock',
-    component: () => import('pages/LockScreen.vue')
-  },
-  {
-    path: '/Pricing',
-    component: () => import('pages/Pricing.vue')
-  },
-  
-  {
-    path: '/Mail',
-    component: () => import('layouts/Mail.vue')
-  },
-  {
-    path: '/Lock-2',
-    component: () => import('pages/LockScreen-2.vue')
-  }
 ]
 
 // Always leave this as last one

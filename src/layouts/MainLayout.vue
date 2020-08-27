@@ -21,7 +21,9 @@
             </q-badge>
             <q-menu>
               <q-list style="min-width: 100px">
-                <messages></messages>
+
+
+                
                 <q-card class="text-center no-shadow no-border">
                   <q-btn label="View All" style="max-width: 120px !important;" flat dense class="text-indigo-8"></q-btn>
                 </q-card>
@@ -95,13 +97,11 @@
 
 <script>
 import EssentialLink from 'components/EssentialLink'
-import Messages from "./Messages";
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: 'MainLayout',
   components: {
-    Messages,
     EssentialLink
   },
   meta () {

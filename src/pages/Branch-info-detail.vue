@@ -50,7 +50,7 @@
                    <!-- {{getBranchMedicineDetail}} -->
 
             <q-btn push color="white" text-color="blue" icon="fas fa-arrow-left" 
-              class="q-mt-md q-mr-xs" :to="{ name: 'branch-info', params: {id: branch_id, row: row}}"/>
+              class="q-mt-md q-mr-xs" :to="{ name: 'branch-info', params: {id: branch_id}}"/>
 
             <div class="q-mt-xs">
                 <q-table
@@ -95,7 +95,6 @@
         </div>
 
 
-
         <q-dialog v-model="addRow" persistent >
              <q-card>
                <q-card-section class="bg-info">
@@ -120,11 +119,11 @@
                <q-card-actions align="right" class="bg-white text-teal">
                  <q-btn flat label="Отменить" v-close-popup />
                  <q-btn flat label="Добавить" @click="addRefunds"/>
-                 {{temp}}
+                 <!-- {{temp}} -->
                </q-card-actions>
              </q-card>
            </q-dialog>
-        {{getBranchMedicineInfo}}
+        <!-- {{getBranchMedicineInfo}} -->
     </q-page>
 </template>
 
@@ -139,26 +138,19 @@ export default {
       },
       branch_id: {
         required: true
-      },
-      row: {
-        required: true
       }
     },
     data(){
         return{
             id: '',
             rowsNumber: null,
-            rowsNumber2: null,
             temp: {},
             temp_total_quantity: '',
             temp_total_piece: '',
             temp_already_added: '',
             addRow: false,
             distribution_amount: {box: '', piece: ''},
-            distribution_branch: '',  
-            distribution_options: [],
 
-          // this should be commented
             getMedicines: {title: '', barcode: '', country: '', manufacture: '', serial_code: '', vat: '', total_quantity: '', left_quantity: ''},
             pagination: {
               rowsPerPage: 8
@@ -205,16 +197,11 @@ export default {
     },
     async mounted(){
       const details = await this.GET_BRANCH_MEDICINE_DETAIL({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
-      //console.log(details);
-      this.getMedicines.title = details.data.title;
-      this.getMedicines.description = details.data.description;
-      this.getMedicines.barcode = details.data.barcode;
-      this.getMedicines.country = details.data.country;
-      this.getMedicines.manufacture = details.data.manufacture;
-      this.getMedicines.serial_code = details.data.serial_code;
-      this.getMedicines.vat = details.data.vat; 
-      this.getMedicines.total_quantity = details.data.total_quantity
-
+      // console.log(details);
+      Object.assign(this.getMedicines, {title: details.title, description: details.description, barcode: details.barcode,
+       country: details.country, manufacture: details.manufacture, serial_code: details.serial_code,vat: details.vat,
+        total_quantity: details.total_quantity});
+     
 
       this.loading = true;
       const answer = await this.GET_BRANCH_MEDICINE_INFO({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
@@ -225,35 +212,43 @@ export default {
       }
       this.loading = false;
 
-      await this.GET_BRANCHES();
-      this.distribution_options = await this.getBranchNames;
       
     },
     computed:{
       ...mapGetters([
-        'getBranches', 'getBranchMedicineInfo', 'getBranchMedicineDetail'
+        'getBranchMedicineInfo', 'getBranchMedicineDetail'
       ]),
-      getBranchNames() {
-        let a = [];
-        for(let i = 0; i<this.getBranches.length; i++){
-          a.push(this.getBranches[i].name);
-        }
-        return a;
-      },
     },
     methods: {
       ...mapActions([
-          'GET_BRANCHES', 'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND', 'ADD_REFUND'
+          'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND', 'ADD_REFUND'
       ]),
       async addRefunds(){
         if(this.distribution_amount.box == ''){
-          this.distribution_amount.piece = 0;
-        }else if(this.distribution_amount.piece == ''){
+          this.distribution_amount.box = 0;
+        }
+        if(this.distribution_amount.piece == ''){
           this.distribution_amount.piece = 0;
         }
         
-        await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.business_medicine_id, 
+        let response = await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.temp.business_medicine_info_id, 
         quantity_box: this.distribution_amount.box, quantity_piece: this.distribution_amount.piece})
+
+        Object.assign(this.distribution_amount, {box: '', piece: ''});
+        // console.log(response);
+        if(response.status == 'SUCCESS'){
+          this.$q.notify({
+            message: 'Успешно добавлено!',
+            color: 'green'
+          })
+        }else{
+          this.$q.notify({
+            message: 'Ошибка!',
+            color: 'negative'
+          })
+        }
+        this.addRow = false;
+
       },
       
     }

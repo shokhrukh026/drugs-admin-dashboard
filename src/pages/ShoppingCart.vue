@@ -40,13 +40,13 @@
 
     <!-- {{data}} -->
            <q-dialog v-model="deleteRowVar">
-             <q-card style="width: 300px">
+             <q-card>
                <q-card-section class="bg-warning">
                  <div class="text-h6 text-white">Удаление</div>
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                 Вы всерьёз хотите удалить строку?
+                 Вы всерьёз хотите удалить лекарство?
                </q-card-section>
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">
@@ -66,21 +66,10 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
       return {
-        answer: {data: {data: []}},
-      
         pagination: {
           rowsPerPage: 4,
           page: 1,
         },
-        row: {
-          index: '',
-          products: '',
-          barcode: '',
-          total_quantity: '',
-          left_quantity: '',
-          vat: '',
-        },
-        editRowVar: false,
         deleteRowVar: false,
         rowDelete: {},
         loading: false,
@@ -119,12 +108,22 @@ export default {
         this.data = [];
         this.data = await this.GET_SHOPPING_CART_MEDICINES();
         await this.$emit('medicines', false);
+        this.$q.notify({
+          icon: 'done',
+          color: 'positive',
+          message: 'Успешно удалено!'
+        })
       },
       async distribute(){
         await this.ADD_ARRIVAL_ALL();
         await this.$emit('medicines', 'distribute_all');
         this.data = [];
         this.data = await this.GET_SHOPPING_CART_MEDICINES();
+        this.$q.notify({
+          icon: 'done',
+          color: 'positive',
+          message: 'Успешно распределено!'
+        })
       }
 
 

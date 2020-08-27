@@ -19,14 +19,6 @@ export default{
         refunds: [],
     },
     mutations:{
-        // MEDICINE_COMMIT: (state, payload) => {
-        //   // console.log(payload.amount);
-        //   // console.log(payload.name);
-
-        //     state.medicines.results.forEach((row, index) => {
-        //       Vue.set(row, payload.name, payload.amount[index]);
-        //     })
-        // },
         SET_REFUNDS_LIST: (state, payload) => {
           state.refunds = payload
           state.refunds.forEach((row, index) => {
@@ -70,9 +62,6 @@ export default{
           })
         },
         SET_MEDICINES: (state, payload) => {
-          // let array = payload;
-          // console.log(array.results);
-          // let array2 = array.results.map()
           state.medicines = payload;
           state.medicines.results.forEach((row, index) => {
             row.index = index + 1
@@ -83,40 +72,6 @@ export default{
           state.medicines_by_branch.results.forEach((row, index) => {
             row.index = index + 1
           })
-
-          // state.medicines_by_branch.results.forEach((row, index) => {
-          //   delete row.index;
-          // })
-
-          // let results = payload.results
-
-          // if(results.length != 0){
-          //   state.medicines_by_branch.results.forEach((row, index) => {
-              
-          //     for(let a = 0; a < results.length; a++){
-          //       if(lodash.isEqual(row, results[a])){
-          //         console.log('it is equal!');
-          //         results.splice(a, 1);
-          //       }
-          //     }
-              
-            
-          //   })
-          //    if(results){
-          //     for(let i = 0; i < results.length; i++){
-          //       Vue.set(state.medicines_by_branch.results, state.medicines_by_branch.results.length, results[i]);
-          //     }
-          //    }
-          // }else{
-          //   console.log('Array is empty!')
-          // }
-
-          // state.medicines_by_branch.results.forEach((row, index) => {
-          //   row.index = index + 1
-          // })
-
-
-
         },
         SET_MEDICINES_DETAIL_INFO: (state, payload) => {
           state.medicine_info = payload;
@@ -153,58 +108,40 @@ export default{
             }
      
             if(!final){
-              // payload.results[i].index
               state.medicines.results.push(payload.results[i]);
             }
             final = false;
     
           }
-          // payload.results.forEach((row, index) => {
-          //   row.index = index + 1
-          // })
-
           //O'zgartirish kerak bo'lishi mumkun
           state.medicines.results.forEach((row, index) => {
             row.index = index + 1
           })
         },
-
-
-
-        // SET_SEARCH_RESULT_ADD_MEDICINE: (state, payload) =>{
-        //   // let same = false;
+        SET_NEXT_PAGE_FOR_BRANCH_MEDICINES: (state, payload) => {
+          let final = false;
+          state.medicines_by_branch.links = payload.links;
+          state.medicines_by_branch.count = payload.count;
           
-        //   let results = payload
-
-        //   if(results.length != 0){
-        //     console.log(state.medicines);
-        //     // if(state.medicines == []){
-        //     //   state.medicines = 
-        //     // }
-
-        //     state.medicines.results.forEach((row, index) => {
-        //       // console.log(row);
-              
-        //       for(let a = 0; a < results.length; a++){
-        //         if(lodash.isEqual(row, results[a])){
-        //           // same = true;
-        //           results.splice(a, 1);
-        //           console.log(results);
-        //         }
-        //       }
-              
-            
-        //     })
-            
-        //      if(results){
-        //       for(let i = 0; i < results.length; i++){
-        //         Vue.set(state.medicines.results, state.medicines.results.length, results[i]);
-        //       }
-        //      }
-        //   }else{
-        //     console.log('Array is empty!')
-        //   }
-        // },
+          for(let i = 0; i<payload.results.length; i++){
+            for(let k = 0; k<state.medicines_by_branch.results.length; k++){
+              let answer = lodash.isEqual(state.medicines_by_branch.results[k], payload.results[i]);
+              if(answer){
+                final = answer;
+              }
+            }
+     
+            if(!final){
+              state.medicines_by_branch.results.push(payload.results[i]);
+            }
+            final = false;
+    
+          }
+          //O'zgartirish kerak bo'lishi mumkun
+          state.medicines_by_branch.results.forEach((row, index) => {
+            row.index = index + 1
+          })
+        },
         SET_SEARCH_RESULT_ALL_MEDICINES: (state, payload) =>{
           state.medicines.results.forEach((row, index) => {
             delete row.index;
@@ -238,35 +175,34 @@ export default{
           })
         },
         SET_SEARCH_RESULT_BY_BRANCH: (state, payload) =>{
-          let same = false;
-          // console.log(payload.results);
+          state.medicines_by_branch.results.forEach((row, index) => {
+            delete row.index;
+          })
+          let results = payload.results
 
-          if(payload.results.length != 0){
+          if(results.length != 0){
             state.medicines_by_branch.results.forEach((row, index) => {
-              console.log(row);
               
-              for(let a = 0; a < payload.results.length; a++){
-                if(lodash.isEqual(row, payload.results[a])){
-                  same = true;
+              for(let a = 0; a < results.length; a++){
+                if(lodash.isEqual(row, results[a])){
+                  console.log('it is equal!');
+                  results.splice(a, 1);
                 }
               }
-              // if(lodash.isEqual(row, payload.results.forEach((item  ) => {
-              //   console.log(item);
-              //   return item
-              // }))){
-              //   console.log('They are same!');
-              //   same = true;
-              // }
             })
-            if(!same){
-              state.medicines_by_branch.results.push(JSON.parse(JSON.stringify(payload.results[0])));
-            }
-            // state.search_result = payload;
+             if(results){
+              for(let i = 0; i < results.length; i++){
+                Vue.set(state.medicines_by_branch.results, state.medicines_by_branch.results.length, results[i]);
+              }
+             }
           }else{
             console.log('Array is empty!')
           }
-        },
 
+          state.medicines_by_branch.results.forEach((row, index) => {
+            row.index = index + 1
+          })
+        },
     },
     actions: {
         async GET_BRANCHES({commit, getters}) {
@@ -323,7 +259,7 @@ export default{
             })
             .then((e) => {
               commit('SET_MEDICINES_BY_BRANCH', e.data);
-               return e;
+               return e.data;
             })
             .catch((error) => {
               console.log(error);
@@ -338,7 +274,7 @@ export default{
             })
             .then((e) => {
               commit('SET_SEARCH_RESULT_BY_BRANCH', e.data);
-               //return e;
+              // return e.data;
             })
             .catch((error) => {
               console.log(error);
@@ -353,7 +289,7 @@ export default{
             })
             .then((e) => {
               commit('SET_MEDICINE_DETAILS', e.data);
-               return e;
+              return e.data;
             })
             .catch((error) => {
               console.log(error);
@@ -368,7 +304,7 @@ export default{
             })
             .then((e) => {
               commit('SET_MEDICINES_DETAIL_INFO', e.data);
-               return e;
+               return e.data;
             })
             .catch((error) => {
               console.log(error);
@@ -383,7 +319,7 @@ export default{
             })
             .then((e) => {
               commit('SET_BRANCHES_IN_MED_INFO_PAGE', e.data);
-               return e;
+               return e.data;
             })
             .catch((error) => {
               console.log(error);
@@ -399,7 +335,7 @@ export default{
             })
             .then((e) => {
               commit('SET_BRANCH_MEDICINE_DETAIL', e.data);
-               return e;
+               return e.data;
             })
             .catch((error) => {
               console.log(error);
@@ -450,7 +386,7 @@ export default{
              console.log(error);
            //   return error;
            })
-       },
+        },
         async GET_NEXT_PAGE({commit, getters},payload) {
           let url = getters.getMedicines.links.next;
           url = url.replace("http://dev.epos.uz/", "/api/");
@@ -461,6 +397,23 @@ export default{
             })
             .then((e) => {
               commit('SET_NEXT_PAGE', e.data);
+               //return e;
+            })
+            .catch((error) => {
+              console.log(error);
+              //   return error;
+            })
+        },
+        async GET_NEXT_PAGE_FOR_BRANCH_MEDICINES({commit, getters},payload) {
+          let url = getters.getMedicinesByBranch.links.next;
+          url = url.replace("http://dev.epos.uz/", "/api/");
+          return await axios({
+              method: "GET",
+              url: url,
+              headers: {Authorization: getters.getUser.token}
+            })
+            .then((e) => {
+              commit('SET_NEXT_PAGE_FOR_BRANCH_MEDICINES', e.data);
                //return e;
             })
             .catch((error) => {
@@ -666,7 +619,7 @@ export default{
            })
        },
        async ADD_REFUND({commit, getters}, payload) {
-          await axios({
+          return await axios({
             method: "POST",
             url: baseUrl + 'refund/add/',
             headers: {Authorization: getters.getUser.token},
@@ -679,11 +632,11 @@ export default{
           })
           .then((e) => {
             console.log('Successfully added!')
-          //   return e;
+             return e.data;
           })
           .catch((error) => {
             console.log(error);
-          //   return error;
+             return error;
           })
         },
        async DELETE_ARRIVAL_ONE({commit, getters}, payload) {
@@ -705,7 +658,7 @@ export default{
          })
       },
       async DELETE_ARRIVAL_FROM_HISTORY({commit, getters}, payload) {
-        await axios({
+        return await axios({
            method: "POST",
            url: '/api/v1/business/delete/arrival/',
            headers: {Authorization: getters.getUser.token},
@@ -715,7 +668,7 @@ export default{
          })
          .then((e) => {
            console.log('Successfully deleted!')
-         //   return e;
+            return e.data;
          })
          .catch((error) => {
            console.log(error);

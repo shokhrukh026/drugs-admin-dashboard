@@ -55,13 +55,13 @@
 
 
            <q-dialog v-model="deleteRowVar">
-             <q-card style="width: 300px">
+             <q-card>
                <q-card-section class="bg-warning">
                  <div class="text-h6 text-white">Удаление</div>
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                 Вы всерьёз хотите удалить строку?
+                 Вы всерьёз хотите удалить лекарство?
                </q-card-section>
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">
@@ -145,7 +145,7 @@ export default {
     },
     computed:{
       ...mapGetters([
-        'getMedicines', 'getBranches', 'getSearchResult'
+        'getMedicines', 'getSearchResult'
       ]),
       pagesNumber () {
         return Math.ceil(this.data.length / this.pagination.rowsPerPage)

@@ -180,9 +180,9 @@
 
 
 
-<q-card-section class="row">
+          <q-card-section class="row">
 
-  <q-list class="row col-8">
+            <q-list class="row col-8">
                    <q-item class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                      <q-item-section>
                       <q-input
@@ -323,11 +323,6 @@ export default {
         }
     },
     watch:{
-      'medicine_add.capacity': function (newVal, oldVal) {
-        if (newVal <= 1) {
-          this.medicine_add.piece = ''
-        }
-      },
       'medicine_add.title': function (newVal, oldVal) {
         if (newVal != '') {
           Object.assign(this.medicine_add, {title: this.medicine_add.title, barcode: this.response[0].barcode, 

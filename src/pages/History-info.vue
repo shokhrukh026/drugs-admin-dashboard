@@ -1,6 +1,8 @@
 <template>
     <q-page class="bg-grey-3">
         <div class="q-pa-md">
+          <q-btn push color="white" text-color="blue" icon="fas fa-arrow-left" 
+              class="q-mb-xs q-mr-xs" to="/history"/>
             <q-table
             dense
             title=""
@@ -39,7 +41,7 @@
             </template>
             </q-table>
         </div>
-        {{data}}
+        <!-- {{data}} -->
     </q-page>
 </template>
 
@@ -59,7 +61,7 @@ export default {
           sortBy: 'added_at',
           descending: true,
         },
-        row: [],
+        row: [{branch_name: ''}],
         loading: false,
         filter: '',
         columns: [
@@ -94,7 +96,6 @@ export default {
       this.row = await this.getArrivalAll.filter(obj => {
         return obj.id == this.id
       })
-      
     },
     computed:{
       ...mapGetters([

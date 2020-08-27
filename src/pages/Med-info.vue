@@ -226,8 +226,6 @@ export default {
 
                 { name: 'actions', label: 'Действия', field: '', align:'center' },
             ],
-
-
             columns2: [
                 { name: 'index', align: 'center', label: '№', field: 'index', sortable: true},
                 { name: 'name', align: 'center', label: 'Имя', field: 'name', sortable: true },
@@ -238,7 +236,6 @@ export default {
                 { name: 'status', align: 'center', label: 'Статус', field: 'status', sortable: true },
                 { name: 'street', align: 'center', label: 'Улица', field: 'street', sortable: true },
                 { name: 'total_quantity', align: 'center', label: 'Кол-во', field: 'total_quantity', sortable: true },
-
 
                 { name: 'actions', label: 'Действия', field: '', align:'center' },
             ],
@@ -269,23 +266,16 @@ export default {
     },
     async mounted(){
       const details = await this.GET_MEDICINE_DETAIL({id: this.id});
-      this.getMedicines.title = details.data.title;
-      this.getMedicines.description = details.data.description;
-      this.getMedicines.barcode = details.data.barcode;
-      this.getMedicines.country = details.data.country;
-      this.getMedicines.manufacture = details.data.manufacture;
-      this.getMedicines.serial_code = details.data.serial_code;
-      this.getMedicines.vat = details.data.vat;
-      this.getMedicines.total_quantity = details.data.total_quantity;
-      this.getMedicines.left_quantity = details.data.left_quantity;
-
+      Object.assign(this.getMedicines, {title: details.title, description: details.description, barcode: details.barcode,
+       country: details.country, manufacture: details.manufacture, serial_code: details.serial_code,vat: details.vat,
+        total_quantity: details.total_quantity, left_quantity: details.left_quantity});
 
       this.loading = true;
       const answer = await this.GET_MEDICINE_INFO({id: this.id});
-      // console.log(answer.data);
-      this.rowsNumber = answer.data.count;
-      for(let i = 0; i < answer.data.results.length; i++ ){
-        this.$set(this.data, this.data.length, answer.data.results[i]);
+      // console.log(answer);
+      this.rowsNumber = answer.count;
+      for(let i = 0; i < answer.results.length; i++ ){
+        this.$set(this.data, this.data.length, answer.results[i]);
       }
       this.loading = false;
       
@@ -293,9 +283,9 @@ export default {
 
       this.loading2 = true;
       const answer2 = await this.GET_BRANCHES_IN_MED_INFO_PAGE({id: this.id});
-      // console.log(answer2.data);
-      for(let i = 0; i < answer2.data.length; i++ ){
-        this.$set(this.data2, this.data2.length, answer2.data[i]);
+      // console.log(answer2);
+      for(let i = 0; i < answer2.length; i++ ){
+        this.$set(this.data2, this.data2.length, answer2[i]);
       }
       this.loading2 = false;
 
@@ -335,7 +325,7 @@ export default {
           this.$q.notify({
             icon: 'done',
             color: 'positive',
-            message: 'Отправлено'
+            message: 'Успешно отправлено в корзину!'
           })
           
           this.onReset();
@@ -344,10 +334,10 @@ export default {
 
           this.data = [];
           const answer = await this.GET_MEDICINE_INFO({id: this.id});
-          // console.log(answer.data);
-          this.rowsNumber = answer.data.count;
-          for(let i = 0; i < answer.data.results.length; i++ ){
-            this.$set(this.data, this.data.length, answer.data.results[i]);
+          // console.log(answer);
+          this.rowsNumber = answer.count;
+          for(let i = 0; i < answer.results.length; i++ ){
+            this.$set(this.data, this.data.length, answer.results[i]);
           }
         
       },

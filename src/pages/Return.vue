@@ -69,8 +69,6 @@ export default {
           { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
           { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
           { name: 'expire_date', align: 'center', label: 'Годен до', field: 'expire_date', sortable: true },
-
-
           { name: 'actions', label: 'Действия', field: '', align:'center' },
         ],
         data: [],
