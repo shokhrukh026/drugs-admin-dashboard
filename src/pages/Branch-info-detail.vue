@@ -123,7 +123,7 @@
                </q-card-actions>
              </q-card>
            </q-dialog>
-        <!-- {{getBranchMedicineInfo}} -->
+        {{getBranchMedicineInfo}}
     </q-page>
 </template>
 
@@ -174,7 +174,7 @@ export default {
       },
       addRow: async function(newVal, oldVal){
         if(newVal == true){
-          let a = await this.GET_CHECK_FOR_REFUND({ branch_id: this.branch_id, med_info_id: this.business_medicine_id});
+          let a = await this.GET_CHECK_FOR_REFUND({ branch_id: this.branch_id, med_info_id: this.temp.business_medicine_info_id});
           // a.limit_quantity = 56;
           // a.capacity = 5;
           // a.already_added = 10;
@@ -231,7 +231,7 @@ export default {
           this.distribution_amount.piece = 0;
         }
         
-        let response = await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.temp.business_medicine_info_id, 
+        let response = await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.temp.branch_medicine_info_id, 
         quantity_box: this.distribution_amount.box, quantity_piece: this.distribution_amount.piece})
 
         Object.assign(this.distribution_amount, {box: '', piece: ''});

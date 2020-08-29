@@ -36,8 +36,11 @@
                         use-input
                         hide-selected
                         fill-input
-                        input-debounce="800"
+                        input-debounce="500"
                         :options="title_options"
+                        option-value="id"
+                        option-label="desc"
+                        emit-value
                         @new-value="createTitleValue"
                         @filter="filterTitle"
                         color="blue"
@@ -72,8 +75,11 @@
                         input-debounce="500"
                         @new-value="createBarcodeValue"
                         :options="barcode_options"
+                        option-value="id"
+                        option-label="desc"
                         @keyup.enter="filterBarcode"
                         color="blue"
+                        ref="barcode"
                       >
                         <template v-slot:no-option>
                           <q-item>
@@ -324,17 +330,32 @@ export default {
     },
     watch:{
       'medicine_add.title': function (newVal, oldVal) {
+        if(newVal == null){
+          newVal = '';
+        }
         if (newVal != '') {
-          Object.assign(this.medicine_add, {title: this.medicine_add.title, barcode: this.response[0].barcode, 
-          country: this.response[0].country, manufacture: this.response[0].manufacture, serial_code: this.response[0].serial_code,
-          capacity: this.response[0].capacity});
+          console.log(newVal);
+          // if(!newVal.id){
+          //   newVal = {id: 0, desc: ''};
+          // }
+          console.log(this.response[newVal]);
+          Object.assign(this.medicine_add, {title: this.response[newVal].title, barcode: this.response[newVal].barcode, 
+          country: this.response[newVal].country, manufacture: this.response[newVal].manufacture, serial_code: this.response[newVal].serial_code,
+          capacity: this.response[newVal].capacity, description: this.response[newVal].description});
         }
       },
       'medicine_add.barcode': function (newVal, oldVal) {
+        if(newVal == null){
+          newVal = '';
+        }
         if (newVal != '') {
-          Object.assign(this.medicine_add, {title: this.response[0].title, barcode: this.medicine_add.barcode, 
-          country: this.response[0].country, manufacture: this.response[0].manufacture, serial_code: this.response[0].serial_code,
-          capacity: this.response[0].capacity});
+          // if(!newVal.id){
+          //   newVal = {id: 0, desc: ''};
+          // }
+          Object.assign(this.medicine_add, {title: this.response[newVal.id].title, barcode: this.response[newVal.id].barcode, 
+          country: this.response[newVal.id].country, manufacture: this.response[newVal.id].manufacture, serial_code: this.response[newVal.id].serial_code,
+          capacity: this.response[newVal.id].capacity, description: this.response[newVal.id].description});
+          this.$refs.barcode.blur();
         }
       },
     },
@@ -353,9 +374,8 @@ export default {
           this.response = await this.GET_SEARCH_RESULT_ADD_MEDICINE({value: val, type: 'title'});
           setTimeout(async() => {
           await update(async () => {
-            // console.log(this.response);
             for(let i = 0; i < this.response.length; i++){
-              await this.$set(this.title_options, i, this.response[i].title);
+              await this.$set(this.title_options, i, {id: i, desc: this.response[i].title});
             }
             if(this.title_options.length > this.response.length){
               while(this.title_options.length > this.response.length){
@@ -366,18 +386,29 @@ export default {
               console.log('Array is empty!');
             }
           })
-          }, 200);
+          }, 300);
 
         }
       },
       async filterBarcode(){
         this.response = await this.GET_SEARCH_RESULT_ADD_MEDICINE({value: this.medicine_add.barcode, type: 'barcode'});
         console.log(this.response);
-        this.barcode_options = [];
-        for(let i = 0; i < this.response.length; i++){
-          this.$set(this.barcode_options, i, this.response[i].barcode);
-        }
+        setTimeout(async() => {
+          if(this.response.length == 1){
+            Object.assign(this.medicine_add, {title: this.response[0].title, barcode: this.response[0].barcode, 
+            country: this.response[0].country, manufacture: this.response[0].manufacture, serial_code: this.response[0].serial_code,
+            capacity: this.response[0].capacity, description: this.response[0].description});
+            this.$refs.barcode.blur();
+          }else{
+            this.barcode_options = [];
+            for(let i = 0; i < this.response.length; i++){
+              this.$set(this.barcode_options, i, {id: i, desc: this.response[i].title});
+            }
+            this.$refs.barcode.showPopup();
+          }
+        }, 500);
       },
+      
       createTitleValue (val, done) {
         if (val.length > 0) {
           if (!this.title_options.includes(val)) {

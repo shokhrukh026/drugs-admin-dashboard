@@ -15,7 +15,7 @@
 
         <div class="q-gutter-sm row items-center no-wrap">
           <!-- Notification -->
-          <q-btn round dense flat color="white" icon="notifications">
+          <!-- <q-btn round dense flat color="white" icon="notifications">
             <q-badge color="red" text-color="white" floating>
               5
             </q-badge>
@@ -30,7 +30,7 @@
               </q-list>
             </q-menu>
             <q-tooltip>Уведомление</q-tooltip>
-          </q-btn>
+          </q-btn> -->
 
 
           <q-btn round flat to="/shopping-cart">
@@ -65,14 +65,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-green text-white">
-      <router-link class="q-pa-sm cursor-pointer" to="/main" tag="div">
-        <q-img  :src="require('../statics/Uzpos_logo_rectangle.png')"></q-img>
-      </router-link>
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-green text-white column">
       <q-list>
+        <router-link class="q-pa-sm cursor-pointer" to="/main" tag="div">
+          <q-img  :src="require('../statics/Uzpos_logo_rectangle.png')"></q-img>
+        </router-link>
        
-      
-
         <q-item :to="bar.url" active-class="q-item-no-link-highlighting" v-for="(bar,item) in sideBar" :key="item">
           <q-item-section avatar>
             <q-icon :name="bar.icon" />
@@ -81,11 +79,18 @@
             <q-item-label>{{bar.title}}</q-item-label>
           </q-item-section>
         </q-item>
-       
-        
 
 
       </q-list>
+      <q-space/>
+      <q-list>
+        <q-item>
+          <q-item-section>
+            Version: 1.0.0
+          </q-item-section>
+        </q-item>
+      </q-list>
+      
     </q-drawer>
 
     <q-page-container class="bg-grey-2">
