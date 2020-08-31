@@ -1,6 +1,7 @@
 import axios from 'axios';
-
 const baseUrl = '/api/v1/user/login/';
+
+// const baseUrl = 'http://dev.epos.uz/v1/user/login/';
 export default{
     state:{
         user: {token: ''}
@@ -38,10 +39,11 @@ export default{
             })
 
 
-        //  Used when above code not works
-          const data = {token: 14212414124412, user_id: 1, business_id: 2}
-          commit('SET_USER_TO_STATE', data);
-          payload.router.push({path: '/main'})
+            //  Used when above code not works
+            const data = {token:"Token 9825cabf4345b6abdce62e02ff082cc977c7a9b0",user_id:1,business_id:1}
+            commit('SET_USER_TO_STATE', data);
+            sessionStorage.setItem('user', JSON.stringify(data));
+            payload.router.push({path: '/main'})
             
         },
         STATE_CHANGED({commit}, payload){

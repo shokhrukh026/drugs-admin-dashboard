@@ -22,8 +22,8 @@
             >
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
-                    <q-btn dense round flat color="grey" :to="{ name: 'branch-update', params: {id: props.row.id, row: props.row}}"
-                     icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" icon="edit"></q-btn>
+                     <!-- :to="{ name: 'branch-update', params: {id: props.row.id, row: props.row}}" -->
                     <q-btn dense round flat color="grey" :to="{ name: 'branch-info', params: {id: props.row.id, row: props.row}}" icon="fas fa-info-circle"></q-btn>
                 </q-td>
             </template>

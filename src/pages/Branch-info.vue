@@ -15,11 +15,10 @@
             :pagination.sync="pagination"
             :rows-per-page-options="[0]"
             :pagination-label="(firstRowIndex, endRowIndex, totalRowsNumber) => firstRowIndex + '-' + endRowIndex + ' из ' + rowsNumber"
-
             >
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
-                    <q-btn dense round flat color="grey" @click="editRow(props)" icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" icon="edit"></q-btn>
                     <q-btn dense round flat color="grey" :to="{ name: 'branch-info-detail', params: {business_medicine_id: props.row.business_medicine_id, branch_id: id}}"  icon="fas fa-info-circle"></q-btn>
                 </q-td>
             </template>
@@ -43,8 +42,6 @@
             </template>
             </q-table>
         </div>
-        <!-- {{data}} -->
-        <!-- {{getMedicinesByBranch}} -->
     </q-page>
 </template>
 
@@ -63,7 +60,8 @@ export default {
       return {
       rowsNumber: '',
       pagination: {
-        rowsPerPage: 8
+        rowsPerPage: 9,
+        page: 1,
       },
       branch_name: this.row ? this.row : '',
       loading: false,
@@ -83,8 +81,19 @@ export default {
       data: [],
       }
     },
-    watch:{
-     
+    watch: {
+      'pagination.page': async function (newVal, oldVal) {
+        if (newVal == this.pagesNumber) {
+          await this.GET_NEXT_PAGE_FOR_BRANCH_MEDICINES();
+        }
+      },
+      filter: async function (newVal, oldVal) {
+        if (newVal.length >= 2) {
+          await this.getSearchResultByFilter();
+        } else {
+          console.log('Search input has less than 2 characters')
+        }
+      },
     },
     async mounted(){
       if(this.getBranches.length == 0){
@@ -98,26 +107,24 @@ export default {
 
 
       this.loading = true;
-      const answer = await this.GET_MEDICINES_BY_BRANCH({virtual_number: this.id});
-      // console.log(answer);
-      this.rowsNumber = answer.count;
-      for(let i = 0; i < answer.results.length; i++ ){
-        this.$set(this.data, this.data.length, answer.results[i]);
-      }
+      await this.GET_MEDICINES_BY_BRANCH({virtual_number: this.id});
+      this.rowsNumber = await this.getMedicinesByBranch.count;
+      this.data = await this.getMedicinesByBranch.results;
       this.loading = false;
-
-
-
     },
     computed:{
       ...mapGetters([
         'getBranches', 'getUser', 'getMedicinesByBranch'
-      ])
+      ]),
+      pagesNumber () {
+        return Math.ceil(this.data.length / this.pagination.rowsPerPage)
+      },
     },
     methods: {
       ...mapActions([
-          'GET_BRANCHES', 'GET_MEDICINES_BY_BRANCH', 'GET_SEARCH_RESULT_BY_BRANCH'
+          'GET_BRANCHES', 'GET_MEDICINES_BY_BRANCH', 'GET_SEARCH_RESULT_BY_BRANCH', 'GET_NEXT_PAGE_FOR_BRANCH_MEDICINES'
       ]),
+      
       async getSearchResultByFilter(){
         return await this.GET_SEARCH_RESULT_BY_BRANCH(
           {

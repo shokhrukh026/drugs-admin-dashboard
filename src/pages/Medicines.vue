@@ -21,9 +21,9 @@
             >
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
-                    <q-btn dense round flat color="grey" :to="{ name: 'edit-product', params: {id: props.row.id, row: props.row}}" icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" icon="edit"></q-btn>
                     <q-btn dense round flat color="grey" :to="{ name: 'med-info', params: {id: props.row.id}}" icon="fas fa-info-circle"></q-btn>
-                    <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete"></q-btn>
+                    <q-btn dense round flat color="grey" icon="delete"></q-btn>
                 </q-td>
             </template>
             <template v-slot:top="props">
@@ -43,6 +43,7 @@
                   icon="fas fa-barcode"
                   color="green"
                 />
+                <q-btn flat round dense icon="fas fa-sync-alt" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -61,7 +62,7 @@
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                 Вы всерьёз хотите удалить лекарство?
+                 - Вы уверены, что хотите удалить лекарство?
                </q-card-section>
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">
@@ -71,7 +72,7 @@
              </q-card>
            </q-dialog>
 
-           <q-dialog v-model="addMedicinePopUp" full-width full-height>
+           <q-dialog v-model="addMedicinePopUp" full-width full-height persistent>
              <addMedicines />
            </q-dialog>
 
@@ -90,6 +91,7 @@ export default {
     },
     data(){
       return {
+        rColor: 'grey',
         scan: false,
         pagination: {
           rowsPerPage: 9,
@@ -120,28 +122,23 @@ export default {
       }
     },
     watch: {
-       'pagination.page': async function (newVal, oldVal){
-         if(newVal == this.pagesNumber){
-           await this.GET_NEXT_PAGE();
-         }
-        },
-        filter: async function(newVal, oldVal) {
-          if(this.scan == false){
-            if(newVal.length >= 2){          
-              await this.getSearchResultByFilter();
-            }
-            else{
-              console.log('Search input has less than 2 characters')
-            }
+      'pagination.page': async function (newVal, oldVal) {
+        if (newVal == this.pagesNumber) {
+          await this.GET_NEXT_PAGE();
+        }
+      },
+      filter: async function (newVal, oldVal) {
+        if (this.scan == false) {
+          if (newVal.length >= 2) {
+            await this.getSearchResultByFilter();
+          } else {
+            console.log('Search input has less than 2 characters')
           }
-        },
+        }
+      },
     },
     async mounted(){
-      this.loading = true;
-      await this.GET_MEDICINES();
-      this.rowsNumber = await this.getMedicines.count;
-      this.data = await this.getMedicines.results;
-      this.loading = false;
+      this.refresh();
     },
     computed:{
       ...mapGetters([
@@ -156,7 +153,15 @@ export default {
       ...mapActions([
         'GET_MEDICINES', 'GET_NEXT_PAGE', 'GET_SEARCH_RESULT_ALL_MEDICINES'
       ]),
-  
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_MEDICINES();
+        this.rowsNumber = await this.getMedicines.count;
+        this.data = await this.getMedicines.results;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
       async getSearchResultByFilter(){
          let a = await this.GET_SEARCH_RESULT_ALL_MEDICINES(
           {
@@ -164,8 +169,6 @@ export default {
           }
         )
       },
-   
-
       deleteRow(props){
         this.rowDelete = props.row
         this.deleteRowVar = !this.deleteRowVar

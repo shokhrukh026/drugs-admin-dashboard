@@ -333,12 +333,10 @@ export default {
         if(newVal == null){
           newVal = '';
         }
-        if (newVal != '') {
-          console.log(newVal);
+        if (newVal !== '') {
           // if(!newVal.id){
-          //   newVal = {id: 0, desc: ''};
+            //   newVal = {id: 0, desc: ''};
           // }
-          console.log(this.response[newVal]);
           Object.assign(this.medicine_add, {title: this.response[newVal].title, barcode: this.response[newVal].barcode, 
           country: this.response[newVal].country, manufacture: this.response[newVal].manufacture, serial_code: this.response[newVal].serial_code,
           capacity: this.response[newVal].capacity, description: this.response[newVal].description});
@@ -348,7 +346,7 @@ export default {
         if(newVal == null){
           newVal = '';
         }
-        if (newVal != '') {
+        if (newVal !== '') {
           // if(!newVal.id){
           //   newVal = {id: 0, desc: ''};
           // }
@@ -361,12 +359,12 @@ export default {
     },
     computed:{
       ...mapGetters([
-        ''
+        'getMedicines'
       ]),
     },
     methods:{
        ...mapActions([
-        'GET_SEARCH_RESULT_ALL_MEDICINES', 'GET_SEARCH_RESULT_ADD_MEDICINE', 'ADD_MEDICINES'
+        'GET_SEARCH_RESULT_ALL_MEDICINES', 'GET_SEARCH_RESULT_ADD_MEDICINE', 'ADD_MEDICINES', 'GET_MEDICINES'
       ]),
        async filterTitle (val, update, abort) {
         if(val.length >= 2){
@@ -392,7 +390,7 @@ export default {
       },
       async filterBarcode(){
         this.response = await this.GET_SEARCH_RESULT_ADD_MEDICINE({value: this.medicine_add.barcode, type: 'barcode'});
-        console.log(this.response);
+        // console.log(this.response);
         setTimeout(async() => {
           if(this.response.length == 1){
             Object.assign(this.medicine_add, {title: this.response[0].title, barcode: this.response[0].barcode, 
@@ -413,7 +411,7 @@ export default {
         if (val.length > 0) {
           if (!this.title_options.includes(val)) {
             this.$set(this.title_options, this.title_options.length, val);
-            console.log(this.title_options);
+            // console.log(this.title_options);
           }
           done(val, 'toggle')
         }
@@ -422,8 +420,7 @@ export default {
         if (val.length > 0) {
           if (!this.barcode_options.includes(val)) {
             this.$set(this.barcode_options, this.barcode_options.length, val);
-            // this.barcode_options.push(val);
-            console.log(this.barcode_options);
+            // console.log(this.barcode_options);
           }
           done(val, 'toggle')
         }

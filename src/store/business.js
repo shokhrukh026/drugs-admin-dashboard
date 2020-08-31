@@ -22,7 +22,11 @@ export default{
         SET_REFUNDS_LIST: (state, payload) => {
           state.refunds = payload
           state.refunds.forEach((row, index) => {
-            row.index = index + 1
+            row.index = index + 1;
+            let quantity_box = Math.floor(row.quantity / row.capacity);
+            let quantity_piece = row.quantity % row.capacity;
+            row.quantity_total = quantity_box + ' упаковок ' + '(по ' + row.capacity + ' )'
+            + ' и ' + quantity_piece + ' штук';  
           })
         },
         SET_ARRIVAL_ALL: (state, payload) => {
@@ -93,6 +97,9 @@ export default{
         },
         SET_BRANCH_MEDICINE_INFO: (state, payload) => {
           state.branch_medicine_info = payload;
+          state.branch_medicine_info.results.forEach((row, index) => {
+            row.index = index + 1
+          })
         },
         SET_NEXT_PAGE: (state, payload) => {
           let final = false;
@@ -553,7 +560,7 @@ export default{
             })
             .catch((error) => {
               console.log(error);
-            //   return error;
+               return error;
             })
         },
         async ADD_MEDICINE_INFO({commit, getters}, payload) {

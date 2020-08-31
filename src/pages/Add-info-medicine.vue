@@ -163,7 +163,7 @@ export default {
     async mounted(){
 
       const details = await this.GET_MEDICINE_DETAIL({id: this.id});
-      console.log(details);
+      // console.log(details);
       Object.assign(this.getMedicines, {title: details.title, description: details.description, barcode: details.barcode,
        country: details.country, manufacture: details.manufacture, serial_code: details.serial_code,vat: details.vat,
         total_quantity: details.total_quantity, left_quantity: details.left_quantity, capacity: details.capacity});

@@ -70,8 +70,8 @@
                 <template v-slot:body-cell-actions="props">
                     <q-td :props="props">
                         <q-btn dense round flat color="grey" @click="(addRow = !addRow) && (temp = props.row)" icon="remove_circle"></q-btn>
-                        <q-btn dense round flat color="grey" to="/branch-update" icon="edit"></q-btn>
-                        <q-btn dense round flat color="grey" to="/branch-info" icon="fas fa-info-circle"></q-btn>
+                        <q-btn dense round flat color="grey" icon="edit"></q-btn>
+                        <q-btn dense round flat color="grey" icon="fas fa-info-circle"></q-btn>
                     </q-td>
                 </template>
                 <template v-slot:top="props">
@@ -123,7 +123,7 @@
                </q-card-actions>
              </q-card>
            </q-dialog>
-        {{getBranchMedicineInfo}}
+        <!-- {{getBranchMedicineInfo}} -->
     </q-page>
 </template>
 
@@ -204,12 +204,9 @@ export default {
      
 
       this.loading = true;
-      const answer = await this.GET_BRANCH_MEDICINE_INFO({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
-      // console.log(answer.data);
-      this.rowsNumber = answer.data.count;
-      for(let i = 0; i < answer.data.results.length; i++ ){
-        this.$set(this.data, this.data.length, answer.data.results[i]);
-      }
+      await this.GET_BRANCH_MEDICINE_INFO({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
+      this.rowsNumber = this.getBranchMedicineInfo.count;
+      this.data = this.getBranchMedicineInfo.results;
       this.loading = false;
 
       
@@ -231,7 +228,7 @@ export default {
           this.distribution_amount.piece = 0;
         }
         
-        let response = await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.temp.branch_medicine_info_id, 
+        let response = await this.ADD_REFUND({branch_id: this.branch_id, business_medicine_info_id: this.temp.business_medicine_info_id, 
         quantity_box: this.distribution_amount.box, quantity_piece: this.distribution_amount.piece})
 
         Object.assign(this.distribution_amount, {box: '', piece: ''});

@@ -406,7 +406,7 @@ export default {
           //    this.$set(this.medicine_add, u, this.response.data.data[u])
           //  }
         }
-      },
+      },  
     },
     computed:{
       

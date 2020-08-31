@@ -16,8 +16,8 @@
             >
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
-                    <q-btn dense round flat color="grey" @click="editRow(props)" icon="edit"></q-btn>
-                    <q-btn dense round flat color="grey" :to="{ name: 'branch-info-detail', params: {business_medicine_id: props.row.business_medicine_id, branch_id: id}}"  icon="fas fa-info-circle"></q-btn>
+                    <q-btn dense round flat color="grey" icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" icon="fas fa-info-circle"></q-btn>
                 </q-td>
             </template>
             <template v-slot:top="props">
@@ -65,7 +65,7 @@ export default {
           { name: 'serial_code', align: 'center', label: 'Серийный номер', field: 'serial_code', sortable: true },
           { name: 'capacity', align: 'center', label: 'Вместимость', field: 'capacity', sortable: true },
           { name: 'vat', align: 'center', label: 'Ндс', field: 'vat', sortable: true },
-          { name: 'quantity', align: 'center', label: 'Кол-во', field: 'quantity', sortable: true },
+          { name: 'quantity_total', align: 'center', label: 'Кол-во', field: 'quantity_total', sortable: true },
           { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
           { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
           { name: 'expire_date', align: 'center', label: 'Годен до', field: 'expire_date', sortable: true },

@@ -16,7 +16,7 @@
             >
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
-                    <q-btn dense round flat color="grey" @click="editRow(props)" icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" icon="edit"></q-btn>
                     <q-btn dense round flat color="grey" :to="{ name: 'history-info', params: {id: props.row.id}}"  icon="fas fa-info-circle"></q-btn>
                     <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete" v-if="props.row.is_received == 'Непринято'"></q-btn>
                 </q-td>
@@ -42,7 +42,7 @@
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                 Вы всерьёз хотите удалить историю?
+                 - Вы уверены, что хотите удалить историю?
                </q-card-section>
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">

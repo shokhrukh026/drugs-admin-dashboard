@@ -81,8 +81,8 @@
                 <template v-slot:body-cell-actions="props">
                     <q-td :props="props">
                         <q-btn dense round flat color="grey" @click="(addRow = !addRow) && (temp = props.row)" icon="add_circle"></q-btn>
-                        <q-btn dense round flat color="grey" to="/branch-update" icon="edit"></q-btn>
-                        <q-btn dense round flat color="grey" to="/branch-info" icon="fas fa-info-circle"></q-btn>
+                        <q-btn dense round flat color="grey" icon="edit"></q-btn>
+                        <q-btn dense round flat color="grey" icon="fas fa-info-circle"></q-btn>
                     </q-td>
                 </template>
                 <template v-slot:top="props">
@@ -115,8 +115,8 @@
                 >
                 <template v-slot:body-cell-actions="props">
                     <q-td :props="props">
-                        <q-btn dense round flat color="grey" to="/branch-update" icon="edit"></q-btn>
-                        <q-btn dense round flat color="grey" to="/branch-info" icon="fas fa-info-circle"></q-btn>
+                        <q-btn dense round flat color="grey" icon="edit"></q-btn>
+                        <q-btn dense round flat color="grey" icon="fas fa-info-circle"></q-btn>
                     </q-td>
                 </template>
                 <template v-slot:top="props">
@@ -153,10 +153,11 @@
                 >
                <q-card-section class="q-pt-none">
                  <div class="row">
-                  <q-select outlined v-model="distribution_branch" :options="distribution_options" label="Филиал" class="q-mt-md col-12"
-                  :rules="[
+                  <q-select outlined v-model="distribution_branch" :options="distribution_options" label="Филиал" class="q-my-md col-12"
+                  />
+                  <!-- :rules="[
                     val => val != '' || 'Филиал не выбран'
-                  ]"/>
+                  ]" -->
                  </div>
                  <div class="row q-mb-xs content-stretch">
                   <q-input outlined v-model="distribution_amount.box" label="Кол-во упаковок" class="col" :suffix="String(left_quantity_box)" 
@@ -173,10 +174,9 @@
                  </div>
             </q-card-section>
                 
-               
                <q-card-actions align="right" class="bg-white text-white">
                    <q-btn class="bg-info" label="Отменить" type="reset" v-close-popup />
-                   <q-btn class="bg-info" label="Добавить" type="submit"/>
+                   <q-btn class="bg-info" label="Добавить" type="submit" :disable="distribution_branch == ''"/>
                </q-card-actions>
               
             </q-form>
@@ -222,7 +222,6 @@ export default {
                 { name: 'left_quantity', align: 'center', label: 'Остаток', field: 'left_quantity', sortable: true },
                 { name: 'purchase_price', align: 'center', label: 'Цена покупки', field: 'purchase_price', sortable: true },
                 { name: 'selling_price', align: 'center', label: 'Цена продажи', field: 'selling_price', sortable: true },
-
                 { name: 'actions', label: 'Действия', field: '', align:'center' },
             ],
             columns2: [
@@ -235,7 +234,6 @@ export default {
                 { name: 'status', align: 'center', label: 'Статус', field: 'status', sortable: true },
                 { name: 'street', align: 'center', label: 'Улица', field: 'street', sortable: true },
                 { name: 'total_quantity', align: 'center', label: 'Кол-во', field: 'total_quantity', sortable: true },
-
                 { name: 'actions', label: 'Действия', field: '', align:'center' },
             ],
             data: [],  
@@ -256,12 +254,13 @@ export default {
       'temp.left_quantity_piece': function (newVal, oldVal){
         this.left_quantity_piece = Number(this.temp.left_quantity_piece);
       },
-      'temp.capacity': function (newVal, oldVal){
-        if(newVal <= 1){
-          this.distribution_amount.piece = 0
+      addRow: function (newVal, oldVal){
+        if(newVal == true){
+          if(this.temp.capacity <= 1){
+            Object.assign(this.distribution_amount, {piece: 0});
+          }
         }
       },
-        
     },
     async mounted(){
       const details = await this.GET_MEDICINE_DETAIL({id: this.id});
@@ -313,7 +312,6 @@ export default {
           await this.$emit('medicines', true);
       
           const branch_id = this.getBranches.filter(el => el.name == this.distribution_branch);
-          console.log(branch_id);
 
           await this.ADD_TO_CART({
             business_medicine_info_id: this.temp.business_medicine_info_id,
@@ -327,8 +325,8 @@ export default {
             message: 'Успешно отправлено в корзину!'
           })
           
-          this.onReset();
           this.addRow = false;
+          this.onReset();
 
 
           this.data = [];
@@ -343,9 +341,6 @@ export default {
       onReset () {
         this.distribution_branch = '';
         this.distribution_amount = {box: '', piece: ''};
-
-        this.$refs.box.resetValidation()
-        this.$refs.piece.resetValidation()
       }
     }
 }
