@@ -77,7 +77,7 @@ export default{
             row.index = index + 1
           })
         },
-        SET_MEDICINES_DETAIL_INFO: (state, payload) => {
+        SET_MEDICINES_INFO: (state, payload) => {
           state.medicine_info = payload;
           state.medicine_info.results.forEach((row, index) => {
             row.index = index + 1
@@ -122,6 +122,30 @@ export default{
           }
           //O'zgartirish kerak bo'lishi mumkun
           state.medicines.results.forEach((row, index) => {
+            row.index = index + 1
+          })
+        },
+        SET_NEXT_PAGE_FOR_MEDICINE_INFO: (state, payload) => {
+          let final = false;
+          state.medicine_info.links = payload.links;
+          state.medicine_info.count = payload.count;
+          
+          for(let i = 0; i<payload.results.length; i++){
+            for(let k = 0; k<state.medicine_info.results.length; k++){
+              let answer = lodash.isEqual(state.medicine_info.results[k], payload.results[i]);
+              if(answer){
+                final = answer;
+              }
+            }
+     
+            if(!final){
+              state.medicine_info.results.push(payload.results[i]);
+            }
+            final = false;
+    
+          }
+          //O'zgartirish kerak bo'lishi mumkun
+          state.medicine_info.results.forEach((row, index) => {
             row.index = index + 1
           })
         },
@@ -310,7 +334,7 @@ export default{
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {
-              commit('SET_MEDICINES_DETAIL_INFO', e.data);
+              commit('SET_MEDICINES_INFO', e.data);
                return e.data;
             })
             .catch((error) => {
@@ -411,6 +435,23 @@ export default{
               //   return error;
             })
         },
+        async GET_NEXT_PAGE_FOR_MEDICINE_INFO({commit, getters},payload) {
+          let url = getters.getMedicinesInfo.links.next;
+          url = url.replace("http://dev.epos.uz/", "/api/");
+          return await axios({
+              method: "GET",
+              url: url,
+              headers: {Authorization: getters.getUser.token}
+            })
+            .then((e) => {
+              commit('SET_NEXT_PAGE_FOR_MEDICINE_INFO', e.data);
+               //return e;
+            })
+            .catch((error) => {
+              console.log(error);
+              //   return error;
+            })
+        },
         async GET_NEXT_PAGE_FOR_BRANCH_MEDICINES({commit, getters},payload) {
           let url = getters.getMedicinesByBranch.links.next;
           url = url.replace("http://dev.epos.uz/", "/api/");
@@ -476,7 +517,7 @@ export default{
         async GET_REFUNDS_LIST({commit, getters},payload) {
           return await axios({
               method: "GET",
-              url: baseUrl + 'refunds/list/',
+              url: baseUrl + 'branch/' + payload.branch_id  + '/refunds/list/',//Look at here
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {

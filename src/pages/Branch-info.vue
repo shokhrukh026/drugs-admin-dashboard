@@ -33,11 +33,12 @@
                     <q-icon name="search" />  
                   </q-btn>
                 </form>
+                <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-sm" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen"
-                class="q-ml-md"
+                class="q-ml-sm"
                 />
             </template>
             </q-table>
@@ -58,27 +59,28 @@ export default {
     },
     data(){
       return {
-      rowsNumber: '',
-      pagination: {
-        rowsPerPage: 9,
-        page: 1,
-      },
-      branch_name: this.row ? this.row : '',
-      loading: false,
-      filter: '',
-      columns: [
-        { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true},
-        { name: 'products', align: 'center', label: 'Лекарство', field: 'title', sortable: true },
-        { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
-        { name: 'country', align: 'center', label: 'Страна', field: 'country', sortable: true },
-        { name: 'manufacture', align: 'center', label: 'Производитель', field: 'manufacture', sortable: true },
-        { name: 'serial_code', align: 'center', label: 'Серийный номер', field: 'serial_code', sortable: true },
-        { name: 'total_quantity', align: 'center', label: 'Кол-во', field: 'total_quantity', sortable: true },
-        { name: 'vat', align: 'center', label: 'НДС', field: 'vat', sortable: true },
-        { name: 'sold_quantity', align: 'center', label: 'Продажи за 30 дней', field: 'sold_quantity', sortable: true },
-        { name: 'actions', label: 'Действия', field: '', align:'center' },
-      ],
-      data: [],
+        rColor: 'grey',
+        rowsNumber: '',
+        pagination: {
+          rowsPerPage: 9,
+          page: 1,
+        },
+        branch_name: this.row ? this.row : '',
+        loading: false,
+        filter: '',
+        columns: [
+          { name: 'index', align: 'center', label: 'No#', field: 'index', sortable: true},
+          { name: 'products', align: 'center', label: 'Лекарство', field: 'title', sortable: true },
+          { name: 'barcode', align: 'center', label: 'Штрих-код', field: 'barcode', sortable: true },
+          { name: 'country', align: 'center', label: 'Страна', field: 'country', sortable: true },
+          { name: 'manufacture', align: 'center', label: 'Производитель', field: 'manufacture', sortable: true },
+          { name: 'serial_code', align: 'center', label: 'Серийный номер', field: 'serial_code', sortable: true },
+          { name: 'total_quantity', align: 'center', label: 'Кол-во', field: 'total_quantity', sortable: true },
+          { name: 'vat', align: 'center', label: 'НДС', field: 'vat', sortable: true },
+          { name: 'sold_quantity', align: 'center', label: 'Продажи за 30 дней', field: 'sold_quantity', sortable: true },
+          { name: 'actions', label: 'Действия', field: '', align:'center' },
+        ],
+        data: [],
       }
     },
     watch: {
@@ -106,11 +108,7 @@ export default {
       
 
 
-      this.loading = true;
-      await this.GET_MEDICINES_BY_BRANCH({virtual_number: this.id});
-      this.rowsNumber = await this.getMedicinesByBranch.count;
-      this.data = await this.getMedicinesByBranch.results;
-      this.loading = false;
+      await this.refresh();
     },
     computed:{
       ...mapGetters([
@@ -124,7 +122,16 @@ export default {
       ...mapActions([
           'GET_BRANCHES', 'GET_MEDICINES_BY_BRANCH', 'GET_SEARCH_RESULT_BY_BRANCH', 'GET_NEXT_PAGE_FOR_BRANCH_MEDICINES'
       ]),
-      
+       async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_MEDICINES_BY_BRANCH({virtual_number: this.id});
+        this.rowsNumber = await this.getMedicinesByBranch.count;
+        this.data = await this.getMedicinesByBranch.results;
+        this.pagination.page = 1;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
       async getSearchResultByFilter(){
         return await this.GET_SEARCH_RESULT_BY_BRANCH(
           {

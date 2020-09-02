@@ -31,11 +31,12 @@
                     <q-icon name="search" />
                 </template>
                 </q-input>
+                <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-sm" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen"
-                class="q-ml-md"
+                class="q-ml-sm"
                 />
             </template>
             </q-table>
@@ -54,6 +55,7 @@ export default {
     },
     data(){
       return {
+        rColor: 'grey',
         rowsNumber: '',
         pagination: {
           rowsPerPage: 8,
@@ -83,10 +85,7 @@ export default {
   
     },
     async mounted(){
-      this.loading = true;
-      await this.GET_ARRIVAL_ALL_INFO({arrival_id: Number(await this.id)});
-      this.data = await this.getArrivalAllInfo;
-      this.loading = false;
+      await this.refresh();
 
       if(this.getArrivalAll.length == 0){
           await this.GET_ARRIVAL_ALL();
@@ -105,6 +104,14 @@ export default {
       ...mapActions([
           'GET_ARRIVAL_ALL_INFO', 'GET_ARRIVAL_ALL'
       ]),
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_ARRIVAL_ALL_INFO({arrival_id: Number(await this.id)});
+        this.data = await this.getArrivalAllInfo;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
      
     }
 }

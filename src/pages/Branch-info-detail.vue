@@ -55,7 +55,6 @@
             <div class="q-mt-xs">
                 <q-table
                 dense
-                title="Покупатели"
                 :data="data"
                 :columns="columns"
                 row-key="index"  
@@ -83,11 +82,12 @@
                         <q-icon name="search" />
                     </template>
                     </q-input>
+                    <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-md" :color="rColor" size="sm" @click="refresh"></q-btn>
                     <q-btn
                     flat round dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen"
-                    class="q-ml-md"
+                    class="q-ml-sm"
                     />
                 </template>
                 </q-table>
@@ -142,6 +142,7 @@ export default {
     },
     data(){
         return{
+            rColor: 'grey',
             id: '',
             rowsNumber: null,
             temp: {},
@@ -153,7 +154,8 @@ export default {
 
             getMedicines: {title: '', barcode: '', country: '', manufacture: '', serial_code: '', vat: '', total_quantity: '', left_quantity: ''},
             pagination: {
-              rowsPerPage: 8
+              rowsPerPage: 8,
+              page: 1,
             },
             loading: false,
             filter: '',
@@ -203,12 +205,7 @@ export default {
         total_quantity: details.total_quantity});
      
 
-      this.loading = true;
-      await this.GET_BRANCH_MEDICINE_INFO({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
-      this.rowsNumber = this.getBranchMedicineInfo.count;
-      this.data = this.getBranchMedicineInfo.results;
-      this.loading = false;
-
+      await this.refresh();
       
     },
     computed:{
@@ -220,6 +217,16 @@ export default {
       ...mapActions([
           'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND', 'ADD_REFUND'
       ]),
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_BRANCH_MEDICINE_INFO({branch_id: this.branch_id,  business_medicine_id: this.business_medicine_id});
+        this.rowsNumber = await this.getBranchMedicineInfo.count;
+        this.data = await this.getBranchMedicineInfo.results;
+        this.pagination.page = 1;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
       async addRefunds(){
         if(this.distribution_amount.box == ''){
           this.distribution_amount.box = 0;

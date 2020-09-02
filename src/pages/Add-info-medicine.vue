@@ -200,7 +200,10 @@ export default {
             selling_price: this.medicine_info_add[i].selling_price,
             expire_date: this.medicine_info_add[i].expire_date,
           })
-          this.$set(this.medicine_info_add, i, {quantity: '', piece: '', purchase_price: '', selling_price: '', expire_date: ''});
+        }
+        this.$set(this.medicine_info_add, 0, {quantity: '', piece: '', purchase_price: '', selling_price: '', expire_date: ''});
+        for(let j = 1; j < this.medicine_info_add.length; j++){
+          this.medicine_info_add.pop()
         }
 
         if(response.status == 'SUCCESS'){

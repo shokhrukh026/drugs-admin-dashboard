@@ -138,7 +138,7 @@ export default {
       },
     },
     async mounted(){
-      this.refresh();
+      await this.refresh();
     },
     computed:{
       ...mapGetters([
@@ -159,6 +159,7 @@ export default {
         await this.GET_MEDICINES();
         this.rowsNumber = await this.getMedicines.count;
         this.data = await this.getMedicines.results;
+        this.pagination.page = 1;
         this.loading = false;
         this.rColor = 'grey';
       },

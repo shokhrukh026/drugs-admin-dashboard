@@ -24,11 +24,12 @@
             <template v-slot:top="props">
                 <span class="text-h6">История приходов</span>
                 <q-space />
+                <q-btn flat round dense icon="fas fa-sync-alt" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen"
-                class="q-ml-md"
+                class="q-ml-sm"
                 />
             </template>
             </q-table>
@@ -62,7 +63,7 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
       return {
-        rowsNumber: '',
+        rColor: 'grey',
         pagination: {
           rowsPerPage: 8,
           sortBy: 'added_at',
@@ -87,9 +88,7 @@ export default {
   
     },
     async mounted(){
-      this.loading = true;
-      this.data = await this.GET_ARRIVAL_ALL();
-      this.loading = false;
+      await this.refresh();
     },
     computed:{
       ...mapGetters([
@@ -100,6 +99,14 @@ export default {
       ...mapActions([
           'GET_ARRIVAL_ALL', 'DELETE_ARRIVAL_FROM_HISTORY'
       ]),
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_ARRIVAL_ALL();
+        this.data = await this.getArrivalAll;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
       deleteRow(props){
         // console.log(props.row);
         this.rowDelete = props.row

@@ -81,7 +81,7 @@ export default {
         }
     },
     mounted(){
-     
+      // console.info(process.env)
     },
     computed: {
       ...mapGetters([

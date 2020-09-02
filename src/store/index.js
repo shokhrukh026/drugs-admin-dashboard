@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 import user from './user'
 import business from './business'
-import data from './data'
 
 
 Vue.use(Vuex)
@@ -22,7 +21,6 @@ export default function (/* { ssrContext } */) {
     modules: {
       user,
       business,
-      data
     },
 
     // enable strict mode (adds overhead!)

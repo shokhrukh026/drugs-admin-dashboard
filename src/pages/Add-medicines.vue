@@ -138,9 +138,9 @@
                        <q-input  color="blue" outlined dense v-model="medicine_add.quantity" label="Кол-во упаковок" />
                      </q-item-section>
                    </q-item>
-                   <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12" :disable="medicine_add.capacity == 1">
+                   <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                      <q-item-section>
-                       <q-input  color="blue" outlined dense v-model="medicine_add.piece" label="Кол-во штук" />
+                       <q-input  :disable="medicine_add.capacity == 1" color="blue" outlined dense v-model="medicine_add.piece" label="Кол-во штук" />
                      </q-item-section>
                    </q-item>
                     <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
@@ -260,12 +260,13 @@
                <q-list class="col">
                    <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                      <q-item-section>
-                       <q-input  color="blue" outlined dense v-model="medicine_add_new.quantity" label="Кол-во упаковок" />
+                       <q-input color="blue" outlined dense v-model="medicine_add_new.quantity" label="Кол-во упаковок" />
                      </q-item-section>
                    </q-item>
-                   <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12" :disable="medicine_add_new.capacity == 1">
+                   <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                      <q-item-section>
-                       <q-input  color="blue" outlined dense v-model="medicine_add_new.piece" label="Кол-во штук" />
+                       <q-input  color="blue" outlined dense v-model="medicine_add_new.piece" label="Кол-во штук" 
+                       :disable="medicine_add_new.capacity == 1"/>
                      </q-item-section>
                    </q-item>
                     <q-item class="col-lg-6 col-md-12 col-sm-12 col-xs-12">

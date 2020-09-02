@@ -36,11 +36,12 @@
                     <q-icon name="search" />
                 </template>
                 </q-input>
+                <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-sm" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen"
-                class="q-ml-md"
+                class="q-ml-sm"
                 />
             </template>
             </q-table> 
@@ -59,6 +60,7 @@ export default {
         pagination: {
           rowsPerPage: 8
         },
+        rColor: 'grey',
         loading: false,
         filter: '',
         columns: [
@@ -78,11 +80,8 @@ export default {
     watch: {
     
     },
-    async created(){
-      this.loading = true;
-      await this.GET_BRANCHES();
-      this.data = await this.getBranches;
-      this.loading = false;
+    async mounted(){
+      await this.refresh();
     },
     computed:{
       ...mapGetters([
@@ -93,6 +92,14 @@ export default {
       ...mapActions([
         'GET_BRANCHES'
       ]),
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_BRANCHES();
+        this.data = await this.getBranches;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
     }
 }
 </script>

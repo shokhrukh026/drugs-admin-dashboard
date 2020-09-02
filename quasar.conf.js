@@ -1,6 +1,13 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
+const DotEnv = require('dotenv')
+
+const webpack = require('webpack')
+
+const envparser = require('./envParser')
+
+
 module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
@@ -66,9 +73,16 @@ module.exports = function (ctx) {
       // preloadChunks: false,
       // extractCSS: false,
 
+
+      env: envparser(),
+      // env: {
+      //   API: ctx.dev
+      //     ? 'http://dev.epos.uz:80'
+      //     : 'http://dev.epos.uz:80'
+      // },
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
-      }
+      },
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
@@ -79,6 +93,7 @@ module.exports = function (ctx) {
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
         '/api': {
+          // target: build.env.API,
           target: 'http://dev.epos.uz:80',
           changeOrigin: true,
           pathRewrite: {

@@ -66,7 +66,6 @@
             <div class="q-mt-xs">
                 <q-table
                 dense
-                title="Покупатели"
                 :data="data"
                 :columns="columns"
                 row-key="index"  
@@ -88,28 +87,28 @@
                 <template v-slot:top="props">
                     <span class="text-h6">Товары с разной наценкой</span>
                     <q-space />
+                    <q-btn flat round dense icon="fas fa-sync-alt" :color="rColor" size="sm" @click="refresh"></q-btn>
                     <q-btn
                     flat round dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen"
-                    class="q-ml-md"
+                    class="q-ml-sm"
                     />
                 </template>
                 </q-table>
             </div>
-          <!-- {{data}} -->
+            <!-- {{getMedicinesInfo}} -->
 
             <div class="q-mt-md">
                 <q-table
                 dense
-                title="Покупатели"
                 :data="data2"
                 :columns="columns2"
                 row-key="index"  
                 :filter="filter"
                 :loading="loading2"
                 separator="cell"
-                :pagination.sync="pagination"
+                :pagination.sync="pagination2"
                 :rows-per-page-options="[0]"
                 :pagination-label="(firstRowIndex, endRowIndex, totalRowsNumber) => firstRowIndex + '-' + endRowIndex + ' из ' + totalRowsNumber"
                 >
@@ -122,11 +121,12 @@
                 <template v-slot:top="props">
                     <span class="text-h6">Лекарства в филиалах</span>
                     <q-space />
+                    <q-btn flat round dense icon="fas fa-sync-alt" :color="rColor2" size="sm" @click="refresh2"></q-btn>
                     <q-btn
                     flat round dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen"
-                    class="q-ml-md"
+                    class="q-ml-sm"
                     />
                 </template>
                 </q-table>
@@ -199,6 +199,8 @@ export default {
     },
     data(){
         return{
+            rColor: 'grey',
+            rColor2: 'grey',
             rowsNumber: null,
             temp: {},
             left_quantity_box: null,
@@ -210,6 +212,12 @@ export default {
 
             getMedicines: {title: '', barcode: '', country: '', manufacture: '', serial_code: '', vat: '', total_quantity: '', left_quantity: ''},
             pagination: {
+              rowsPerPage: 8,
+              page: 1,
+              sortBy: 'expire_date',
+              descending: true,
+            },
+            pagination2: {
               rowsPerPage: 8
             },
             loading: false,
@@ -241,6 +249,11 @@ export default {
         }
     },
     watch:{ 
+      'pagination.page': async function (newVal, oldVal) {
+        if (newVal == this.pagesNumber) {
+          await this.GET_NEXT_PAGE_FOR_MEDICINE_INFO();
+        }
+      },
       'distribution_amount.box': function (newVal, oldVal){
          if(newVal < this.left_quantity_box){
            this.left_quantity_piece = Number(this.temp.capacity);
@@ -268,29 +281,13 @@ export default {
        country: details.country, manufacture: details.manufacture, serial_code: details.serial_code,vat: details.vat,
         total_quantity: details.total_quantity, left_quantity: details.left_quantity});
 
-      this.loading = true;
-      const answer = await this.GET_MEDICINE_INFO({id: this.id});
-      // console.log(answer);
-      this.rowsNumber = answer.count;
-      for(let i = 0; i < answer.results.length; i++ ){
-        this.$set(this.data, this.data.length, answer.results[i]);
-      }
-      this.loading = false;
+      await this.refresh();
       
+      await this.refresh2();
 
-
-      this.loading2 = true;
-      const answer2 = await this.GET_BRANCHES_IN_MED_INFO_PAGE({id: this.id});
-      // console.log(answer2);
-      for(let i = 0; i < answer2.length; i++ ){
-        this.$set(this.data2, this.data2.length, answer2[i]);
-      }
-      this.loading2 = false;
 
       await this.GET_BRANCHES();
       this.distribution_options = await this.getBranchNames;
-
-      
     },
     computed:{
       ...mapGetters([
@@ -303,11 +300,33 @@ export default {
         }
         return a;
       },
+      pagesNumber () {
+        return Math.ceil(this.data.length / this.pagination.rowsPerPage)
+      },
     },
     methods: {
       ...mapActions([
-          'GET_MEDICINE_DETAIL', 'GET_MEDICINE_INFO', 'GET_BRANCHES', 'GET_BRANCHES_IN_MED_INFO_PAGE', 'ADD_TO_CART'
+          'GET_MEDICINE_DETAIL', 'GET_MEDICINE_INFO', 'GET_BRANCHES', 'GET_BRANCHES_IN_MED_INFO_PAGE', 'ADD_TO_CART',
+          'GET_NEXT_PAGE_FOR_MEDICINE_INFO'
       ]),
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_MEDICINE_INFO({id: this.id});
+        this.rowsNumber = await this.getMedicinesInfo.count;
+        this.data = await this.getMedicinesInfo.results;
+        this.pagination.page = 1;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
+      async refresh2(){
+        this.rColor2 = 'blue';
+        this.loading2 = true;
+        await this.GET_BRANCHES_IN_MED_INFO_PAGE({id: this.id});
+        this.data2 = await this.getBranchesInMedInfoPage;
+        this.loading2 = false;
+        this.rColor2 = 'grey';
+      },
       async addToCart(){
           await this.$emit('medicines', true);
       
@@ -326,16 +345,11 @@ export default {
           })
           
           this.addRow = false;
-          this.onReset();
+          await this.onReset();
 
 
-          this.data = [];
-          const answer = await this.GET_MEDICINE_INFO({id: this.id});
-          // console.log(answer);
-          this.rowsNumber = answer.count;
-          for(let i = 0; i < answer.results.length; i++ ){
-            this.$set(this.data, this.data.length, answer.results[i]);
-          }
+          await this.refresh();
+          
         
       },
       onReset () {

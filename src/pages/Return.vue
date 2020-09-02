@@ -29,12 +29,12 @@
                       <q-icon name="search" />
                   </template>
                 </q-input>
-             
+                <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-md" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 @click="props.toggleFullscreen"
-                class="q-ml-md"
+                class="q-ml-sm"
                 />
             </template>
             </q-table>
@@ -50,10 +50,10 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
       return {
-        rowsNumber: '',
         pagination: {
           rowsPerPage: 8
         },
+        rColor: 'grey',
         loading: false,
         filter: '',
         columns: [
@@ -78,9 +78,7 @@ export default {
   
     },
     async mounted(){
-      this.loading = true;
-      this.data = await this.GET_REFUNDS_LIST();
-      this.loading = false;
+      await this.refresh();
     },
     computed:{
       ...mapGetters([
@@ -91,6 +89,14 @@ export default {
       ...mapActions([
           'GET_REFUNDS_LIST'
       ]),
+      async refresh(){
+        this.rColor = 'blue';
+        this.loading = true;
+        await this.GET_REFUNDS_LIST();
+        this.data = await this.getRefunds;
+        this.loading = false;
+        this.rColor = 'grey';
+      },
     }
 }
 </script>
