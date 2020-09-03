@@ -214,8 +214,8 @@ export default {
             pagination: {
               rowsPerPage: 8,
               page: 1,
-              sortBy: 'expire_date',
-              descending: true,
+              // sortBy: 'expire_date',
+              // descending: true,
             },
             pagination2: {
               rowsPerPage: 8

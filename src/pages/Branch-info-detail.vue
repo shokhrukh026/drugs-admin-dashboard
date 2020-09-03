@@ -123,7 +123,7 @@
                </q-card-actions>
              </q-card>
            </q-dialog>
-        {{getBranchMedicineInfo}}
+        <!-- {{getBranchMedicineInfo}} -->
     </q-page>
 </template>
 
@@ -156,8 +156,8 @@ export default {
             pagination: {
               rowsPerPage: 8,
               page: 1,
-              sortBy: 'expire_date',
-              descending: true,
+              // sortBy: 'expire_date',
+              // descending: true,
             },
             loading: false,
             filter: '',
