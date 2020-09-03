@@ -149,6 +149,31 @@ export default{
             row.index = index + 1
           })
         },
+        SET_NEXT_PAGE_FOR_BRANCH_INFO_DETAIL: (state, payload) => {
+          let final = false;
+          state.branch_medicine_info.links = payload.links;
+          state.branch_medicine_info.count = payload.count;
+          
+          for(let i = 0; i<payload.results.length; i++){
+            for(let k = 0; k<state.branch_medicine_info.results.length; k++){
+              let answer = lodash.isEqual(state.branch_medicine_info.results[k], payload.results[i]);
+              if(answer){
+                final = answer;
+              }
+            }
+     
+            if(!final){
+              state.branch_medicine_info.results.push(payload.results[i]);
+            }
+            final = false;
+    
+          }
+          //O'zgartirish kerak bo'lishi mumkun
+          state.branch_medicine_info.results.forEach((row, index) => {
+            row.index = index + 1
+          })
+        },
+
         SET_NEXT_PAGE_FOR_BRANCH_MEDICINES: (state, payload) => {
           let final = false;
           state.medicines_by_branch.links = payload.links;
@@ -452,6 +477,23 @@ export default{
               //   return error;
             })
         },
+        async GET_NEXT_PAGE_FOR_BRANCH_INFO_DETAIL({commit, getters},payload) {
+          let url = getters.getBranchMedicineInfo.links.next;
+          url = url.replace("http://dev.epos.uz/", "/api/");
+          return await axios({
+              method: "GET",
+              url: url,
+              headers: {Authorization: getters.getUser.token}
+            })
+            .then((e) => {
+              commit('SET_NEXT_PAGE_FOR_BRANCH_INFO_DETAIL', e.data);
+               //return e;
+            })
+            .catch((error) => {
+              console.log(error);
+              //   return error;
+            })
+        },
         async GET_NEXT_PAGE_FOR_BRANCH_MEDICINES({commit, getters},payload) {
           let url = getters.getMedicinesByBranch.links.next;
           url = url.replace("http://dev.epos.uz/", "/api/");
@@ -517,7 +559,7 @@ export default{
         async GET_REFUNDS_LIST({commit, getters},payload) {
           return await axios({
               method: "GET",
-              url: baseUrl + 'branch/' + payload.branch_id  + '/refunds/list/',//Look at here
+              url: baseUrl + 'branch/' + payload.branch_id + '/refunds/list/',//Look at here  
               headers: {Authorization: getters.getUser.token}
             })
             .then((e) => {

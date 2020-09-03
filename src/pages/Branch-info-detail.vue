@@ -76,12 +76,12 @@
                 <template v-slot:top="props">
                     <span class="text-h6">Товары с разной наценкой</span>
                     <q-space />
-                    <q-input borderless dense debounce="300" color="primary" v-model="filter"
+                    <!-- <q-input borderless dense debounce="300" color="primary" v-model="filter"
                     placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
                     <template v-slot:append>
                         <q-icon name="search" />
                     </template>
-                    </q-input>
+                    </q-input> -->
                     <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-md" :color="rColor" size="sm" @click="refresh"></q-btn>
                     <q-btn
                     flat round dense
@@ -123,7 +123,7 @@
                </q-card-actions>
              </q-card>
            </q-dialog>
-        <!-- {{getBranchMedicineInfo}} -->
+        {{getBranchMedicineInfo}}
     </q-page>
 </template>
 
@@ -156,6 +156,8 @@ export default {
             pagination: {
               rowsPerPage: 8,
               page: 1,
+              sortBy: 'expire_date',
+              descending: true,
             },
             loading: false,
             filter: '',
@@ -171,6 +173,11 @@ export default {
         }
     },
     watch:{ 
+      'pagination.page': async function (newVal, oldVal) {
+        if (newVal == this.pagesNumber) {
+          await this.GET_NEXT_PAGE_FOR_BRANCH_INFO_DETAIL();
+        }
+      },
       'temp.total_qauntity': function (newVal, oldVal){
         this.temp_total_quantity = Number(this.temp.total_qauntity);
       },
@@ -212,10 +219,14 @@ export default {
       ...mapGetters([
         'getBranchMedicineInfo', 'getBranchMedicineDetail'
       ]),
+      pagesNumber () {
+        return Math.ceil(this.data.length / this.pagination.rowsPerPage)
+      },
     },
     methods: {
       ...mapActions([
-          'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND', 'ADD_REFUND'
+          'GET_BRANCH_MEDICINE_DETAIL', 'GET_BRANCH_MEDICINE_INFO', 'GET_CHECK_FOR_REFUND', 'ADD_REFUND',
+          'GET_NEXT_PAGE_FOR_BRANCH_INFO_DETAIL'
       ]),
       async refresh(){
         this.rColor = 'blue';

@@ -122,7 +122,7 @@ export default {
         {title: 'Главная', icon: 'dashboard', url: '/main'},
         {title: 'Филиалы', icon: 'fas fa-building', url: '/branches'},
         {title: 'Лекарства', icon: 'fas fa-box-open', url: '/medicines'},
-        {title: 'Возврат', icon: 'fas fa-exchange-alt', url: '/return'},
+        {title: 'Возврат', icon: 'fas fa-exchange-alt', url: '/return-branches'},
         {title: 'История', icon: 'fas fa-history', url: '/history'},
       ]
 
