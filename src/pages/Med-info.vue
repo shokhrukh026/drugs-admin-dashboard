@@ -161,13 +161,11 @@
                  </div>
                  <div class="row q-mb-xs content-stretch">
                   <q-input outlined v-model="distribution_amount.box" label="Кол-во упаковок" class="col" :suffix="String(left_quantity_box)" 
-                  ref="box"
                   :rules="[
                     val => val >= 0 && val <= left_quantity_box || 'В складе имеется ' + left_quantity_box + ' упаковок'
                   ]"/>
                   <q-input outlined v-model="distribution_amount.piece" label="Кол-во штук" class="q-pl-md col" :suffix="String(left_quantity_piece)" 
                   v-if="temp.capacity > 1" 
-                  ref="piece"
                   :rules="[
                     val => val >= 0 && val <= left_quantity_piece || 'В складе имеется ' + left_quantity_piece + ' штук'
                   ]"/>
@@ -180,9 +178,9 @@
                </q-card-actions>
               
             </q-form>
-             </q-card>
+          </q-card>
 
-           </q-dialog>
+        </q-dialog>
         <!-- {{getMedicinesInfo}} -->
     </q-page>
 </template>
@@ -331,7 +329,12 @@ export default {
           await this.$emit('medicines', true);
       
           const branch_id = this.getBranches.filter(el => el.name == this.distribution_branch);
-
+          if(this.distribution_amount.piece == ''){
+            this.distribution_amount.piece = 0;
+          }
+          if(this.distribution_amount.box == ''){
+            this.distribution_amount.box = 0;
+          }
           await this.ADD_TO_CART({
             business_medicine_info_id: this.temp.business_medicine_info_id,
             quantity_box: this.distribution_amount.box,
@@ -347,10 +350,7 @@ export default {
           this.addRow = false;
           await this.onReset();
 
-
           await this.refresh();
-          
-        
       },
       onReset () {
         this.distribution_branch = '';
