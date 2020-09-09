@@ -1,12 +1,6 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
-const DotEnv = require('dotenv')
-
-const webpack = require('webpack')
-
-const envparser = require('./envParser')
-
 
 module.exports = function (ctx) {
   return {
@@ -74,7 +68,8 @@ module.exports = function (ctx) {
       // extractCSS: false,
 
 
-      env: envparser(),
+      // env: envparser(), This is from envParser.js
+
       // env: {
       //   API: ctx.dev
       //     ? 'http://dev.epos.uz:80'
