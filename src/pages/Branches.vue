@@ -1,12 +1,9 @@
 <template>
     <q-page class="bg-grey-3">
         <div class="q-pa-md">
-
             <!-- <q-page-sticky position="top-left" :offset="[18, 18]" style="z-index: 1000;" class="backBtn">
               <q-btn round color="blue" icon="arrow_back" />
             </q-page-sticky> -->
-
-
             <q-table
             dense
             title="Покупатели"
