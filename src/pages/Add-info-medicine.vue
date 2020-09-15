@@ -202,7 +202,9 @@ export default {
           })
         }
         this.$set(this.medicine_info_add, 0, {quantity: '', piece: '', purchase_price: '', selling_price: '', expire_date: ''});
-        for(let j = 1; j < this.medicine_info_add.length; j++){
+        
+        let lengthPopUp = this.medicine_info_add.length
+        for(let j = 1; j < lengthPopUp; j++){
           this.medicine_info_add.pop()
         }
 
