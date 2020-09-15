@@ -18,8 +18,8 @@
             >
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
-                    <q-btn dense round flat color="grey" :to="{ name: 'edit-product', params: {id: props.row.id, row: props.row}}" icon="edit"></q-btn>
-                    <q-btn dense round flat color="grey" :to="{ name: 'med-info', params: {id: props.row.id}}" icon="fas fa-info-circle"></q-btn>
+                    <q-btn dense round flat color="grey" icon="edit"></q-btn>
+                    <q-btn dense round flat color="grey" icon="fas fa-info-circle"></q-btn>
                     <q-btn dense round flat color="grey" @click="deleteRow(props)" icon="delete"></q-btn>
                 </q-td>
             </template>
@@ -41,12 +41,12 @@
     <!-- {{data}} -->
            <q-dialog v-model="deleteRowVar">
              <q-card>
-               <q-card-section class="bg-warning">
+               <q-card-section class="bg-negative">
                  <div class="text-h6 text-white">Удаление</div>
                </q-card-section>
                <q-separator />
                <q-card-section class="q-pt-none q-pa-lg">
-                 Вы всерьёз хотите удалить лекарство?
+                - Вы уверены, что хотите удалить лекарства из корзины?
                </q-card-section>
                <q-separator />
                <q-card-actions align="right" class="bg-white text-teal">

@@ -133,7 +133,6 @@ export default {
   },
   async mounted(){
     await this.GET_SHOPPING_CART_MEDICINES();
-    // console.log(this.getShoppingCartMedicines.length);
     this.cart = this.getShoppingCartMedicines.length;
   },
   computed:{

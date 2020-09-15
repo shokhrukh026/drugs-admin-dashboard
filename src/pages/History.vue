@@ -24,6 +24,12 @@
             <template v-slot:top="props">
                 <span class="text-h6">История приходов</span>
                 <q-space />
+                <q-input borderless dense debounce="300" color="primary" v-model="filter"
+                  placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; border-radius: 5px;">
+                  <template v-slot:append>
+                      <q-icon name="search" />
+                  </template>
+                </q-input>
                 <q-btn flat round dense icon="fas fa-sync-alt" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
