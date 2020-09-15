@@ -33,7 +33,7 @@
                     <q-icon name="search" />  
                   </q-btn>
                 </form>
-                <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-sm" :color="rColor" size="sm" @click="refresh"></q-btn>
+                <q-btn flat round dense icon="fas fa-sync-alt" class="q-ml-md" :color="rColor" size="sm" @click="refresh"></q-btn>
                 <q-btn
                 flat round dense
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
