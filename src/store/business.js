@@ -634,7 +634,7 @@ export default{
                 description: payload.description,
                 purchase_price: payload.purchase_price,
                 selling_price: payload.selling_price,
-                expire_date: '2020-08-30',
+                expire_date: payload.expire_date,
               }
             })
             .then((e) => {
