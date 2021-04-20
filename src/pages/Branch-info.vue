@@ -25,7 +25,7 @@
             <template v-slot:top="props">
                 <span class="text-h6">Лекарства в {{branch_name.name}}</span>
                 <q-space />
-               <form @submit.prevent.stop="getSearchResultByFilter"  class="row">
+               <form @submit.prevent="getSearchResultByFilter"  class="row">
                   <q-input square borderless dense debounce="500" color="primary" v-model="filter"  
                   placeholder="Искать" style="border: 1px solid silver; padding: 0px 5px; min-width: 20vw;">
                   </q-input>

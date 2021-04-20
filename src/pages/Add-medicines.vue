@@ -367,7 +367,7 @@ export default {
        ...mapActions([
         'GET_SEARCH_RESULT_ALL_MEDICINES', 'GET_SEARCH_RESULT_ADD_MEDICINE', 'ADD_MEDICINES'
       ]),
-       async filterTitle (val, update, abort) {
+      async filterTitle (val, update, abort) {
         if(val.length >= 2){
 
           this.response = await this.GET_SEARCH_RESULT_ADD_MEDICINE({value: val, type: 'title'});

@@ -69,7 +69,7 @@ module.exports = function (ctx) {
 
 
       // env: envparser(), This is from envParser.js
-
+      distDir: ctx.mode.spa ? 'public' : null,
       // env: {
       //   API: ctx.dev
       //     ? 'http://dev.epos.uz:80'
